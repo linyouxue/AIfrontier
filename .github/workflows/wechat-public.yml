@@ -1,4 +1,4 @@
-name: Refresh WeChat and technical blogs
+name: Refresh WeChat, blogs and social accounts
 
 on:
   workflow_dispatch:
@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist/wechat-preview
-          for name in wechat blogs; do
+          for name in wechat blogs social; do
             file="dist/wechat-preview/$name.json"
             if [[ -s "$file" ]]; then continue; fi
             status=$(curl --silent --show-error --location --retry 2 --max-time 45 --output "$RUNNER_TEMP/previous.json" --write-out '%{http_code}' "https://linyouxue.github.io/AIfrontier/$name.json?run=$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT")
@@ -77,6 +77,26 @@ jobs:
           with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
               print('blogs_ok=' + str(any(s['status']=='ok' for s in data['sources'])).lower(), file=out)
           PY
+      - name: Start the Xiaohongshu reader
+        env:
+          XIAOHONGSHU_COOKIE: ${{ secrets.XIAOHONGSHU_COOKIE }}
+        run: |
+          if [[ -z "$XIAOHONGSHU_COOKIE" ]]; then
+            echo "::notice::Xiaohongshu awaits the XIAOHONGSHU_COOKIE secret"
+            exit 0
+          fi
+          echo "AIFRONTIER_RSSHUB_URL=http://127.0.0.1:1200" >> "$GITHUB_ENV"
+          image=ghcr.io/diygod/rsshub@sha256:40f115be9967377880b2ea62ecf5d4fd4b1820c15518dd9146f3b874464ffdb2
+          if docker run -d --rm --name social-rsshub --log-driver=none -p 127.0.0.1:1200:1200 -e XIAOHONGSHU_COOKIE "$image"; then
+            curl --fail --silent --retry 12 --retry-connrefused --retry-delay 2 --max-time 4 http://127.0.0.1:1200/healthz >/dev/null || echo "::warning::RSSHub has not become ready"
+          else
+            echo "::warning::RSSHub did not start"
+          fi
+      - name: Collect and publish account updates
+        run: |
+          python3 scripts/collect_social.py
+          python3 scripts/render_social.py
+          jq -r '.sources[] | [.name, .status, (.inserted|tostring)] | join(" · ")' dist/wechat-preview/social.json >> "$GITHUB_STEP_SUMMARY"
       - name: Report source coverage
         id: report
         run: |

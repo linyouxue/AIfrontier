@@ -27,9 +27,9 @@ AI_TOPIC = re.compile(
 )
 
 
-def read(url):
+def read(url, *, timeout=20):
     request = Request(url, headers={"User-Agent": "AIfrontier/0.1 (+https://github.com/linyouxue/AIfrontier)"})
-    with urlopen(request, timeout=20) as response:
+    with urlopen(request, timeout=timeout) as response:
         body = response.read(4_000_001)
     if len(body) > 4_000_000:
         raise ValueError("Blog response exceeded 4 MB")

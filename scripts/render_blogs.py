@@ -43,7 +43,8 @@ def publish(output):
         title = "技术博客" if not kind else label
         page = listing(
             title=title, description="最近三个月 AI 作者与研究团队发表的技术文章。",
-            navigation=f'<a href="{root}../">微信公众号</a><a href="{root}" aria-current="page">技术博客</a>',
+            navigation=f'<a href="{root}../">微信公众号</a><a href="{root}" aria-current="page">技术博客</a>'
+                       f'<a href="{root}../social/">X 与小红书</a>',
             coverage=f"{counts['author']} 位作者 · {counts['team']} 个团队 · 近三个月收录 {len(cards[''])} 篇",
             filters='<nav class="filters" aria-label="博客类型">' + "".join(links) + "</nav>",
             checked=checked.strftime("%Y-%m-%d %H:%M"), statuses="\n".join(statuses),

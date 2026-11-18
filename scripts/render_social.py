@@ -42,7 +42,7 @@ def publish(output):
     checked = datetime.fromisoformat(max(s["checkedAt"] for s in sources)).astimezone(SHANGHAI)
     page = listing(title="X 与小红书", description="关注账号近三个月的技术帖与公开笔记。点开标题可阅读原文。",
                    navigation='<a href="../">微信公众号</a><a href="../blogs/">技术博客</a>'
-                              '<a href="./" aria-current="page">X 与小红书</a>',
+                              '<a href="./" aria-current="page">X 与小红书</a><a href="../papers/">arXiv 论文</a>',
                    filters='<nav class="filters"><a href="#x">X</a><a href="#xiaohongshu">小红书</a></nav>',
                    checked=checked.strftime("%Y-%m-%d %H:%M"), statuses="".join(statuses),
                    coverage=f'{len(sources)} 个账号 · {len(items)} 条收录', articles="".join(sections))

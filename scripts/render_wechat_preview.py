@@ -48,7 +48,7 @@ def render(snapshot):
         title="微信公众号文章", description="查看 AIfrontier 收录的微信公众号文章，点开阅读原文。",
         coverage=f"{len({s['account'] for s in sources})} 个公众号 · {len(articles)} 篇",
         navigation='<a href="./" aria-current="page">微信公众号</a><a href="blogs/">技术博客</a>'
-                   '<a href="social/">X 与小红书</a>',
+                   '<a href="social/">X 与小红书</a><a href="papers/">arXiv 论文</a>',
         filters="",
         checked=checked.strftime("%Y-%m-%d %H:%M"),
         statuses="\n".join(status_rows),

@@ -1,4 +1,4 @@
-name: Refresh WeChat, blogs and social accounts
+name: Refresh AIfrontier publications
 
 on:
   workflow_dispatch:
@@ -17,12 +17,13 @@ jobs:
     if: github.ref == 'refs/heads/main'
     environment: wechat-collection
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 100
     env:
       SNAPSHOT_KEY: public-wechat-v1-${{ github.run_id }}-${{ github.run_attempt }}
     outputs:
       reader_ok: ${{ steps.report.outputs.reader_ok }}
       blogs_ok: ${{ steps.blogs.outputs.blogs_ok }}
+      papers_ok: ${{ steps.papers.outputs.fresh }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -97,6 +98,22 @@ jobs:
           python3 scripts/collect_social.py
           python3 scripts/render_social.py
           jq -r '.sources[] | [.name, .status, (.inserted|tostring)] | join(" · ")' dist/wechat-preview/social.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Restore the published paper catalog and votes
+        shell: bash
+        run: |
+          mkdir -p dist/wechat-preview/paper-work
+          for name in archive.json.gz paper-heat.json; do
+            file="dist/wechat-preview/paper-work/$name"
+            status=$(curl --silent --show-error --location --retry 2 --max-time 120 --output "$file" --write-out '%{http_code}' "https://linyouxue.github.io/AIfrontier/papers/$name?run=$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT")
+            case "$status" in
+              200) ;;
+              404) rm "$file" ;;
+              *) echo "::error::Cannot restore $name (HTTP $status)"; exit 1 ;;
+            esac
+          done
+      - name: Collect arXiv announcements, refresh community votes and build the paper directory
+        id: papers
+        run: python3 -u scripts/publish_papers.py
       - name: Report source coverage
         id: report
         run: |
@@ -146,4 +163,9 @@ jobs:
         if: always() && needs.collect.outputs.blogs_ok == 'false'
         run: |
           echo "::error::All blog sources failed. See the collection summary."
+          exit 1
+      - name: Check arXiv and community votes
+        if: always() && needs.collect.outputs.papers_ok == 'false'
+        run: |
+          echo "::error::The paper directory was rebuilt with retained data. Check the collection log."
           exit 1

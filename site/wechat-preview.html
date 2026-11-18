@@ -16,6 +16,11 @@
     nav a{color:var(--accent);text-underline-offset:.22em}
     nav [aria-current="page"]{font-weight:700;text-decoration:none;color:var(--ink)}
     nav.filters{margin:.9rem 0}
+    #paper-controls{display:flex;align-items:end;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+    #paper-controls label{display:grid;gap:.2rem;flex:1 1 10rem;color:var(--muted);font-size:.85rem}
+    #paper-controls .search{flex-basis:75%}
+    #paper-controls input,#paper-controls select,button{min-width:0;max-width:100%;padding:.52rem .7rem;border:1px solid var(--line);border-radius:.4rem;background:var(--card);color:var(--ink);font:inherit}
+    button:enabled{cursor:pointer}button:disabled{opacity:.45}
     h1{margin:.25rem 0 .5rem;font-size:clamp(1.85rem,6vw,2.75rem);line-height:1.25}
     .meta,.status{color:var(--muted);font-size:.87rem}
     .status{margin:0}

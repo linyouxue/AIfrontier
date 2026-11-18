@@ -218,19 +218,16 @@ function cardDetails(key, entry) {
     return '<div class="source-details"><span>官宣 ' + dateLabel(entry.announcedAt) +
       '</span><span>开放 ' + dateLabel(entry.availableAt) + '</span></div>';
   }
-  if (key !== 'podcasts') return '';
+  return '';
+}
+
+function podcastByline(entry) {
   const guests = namedList(entry.guests);
-  const topics = namedList(entry.topics);
   const duration = durationLabel(entry.durationSeconds);
-  const details = [
-    typeof entry.show === 'string' && entry.show,
-    guests && '嘉宾 ' + guests,
-    duration,
-    topics && '主题 ' + topics,
-  ].filter(Boolean);
-  return details.length
-    ? '<div class="source-details">' + details.map(detail => '<span>' + escapeHtml(detail) + '</span>').join('') + '</div>'
-    : '';
+  const show = typeof entry.show === 'string' && entry.show.trim() ? entry.show : entry.source;
+  return '<span class="podcast-byline"><strong>' + escapeHtml(show) + '</strong>' +
+    (guests ? '<span>嘉宾 ' + escapeHtml(guests) + '</span>' : '') +
+    (duration ? '<span>' + escapeHtml(duration) + '</span>' : '') + '</span>';
 }
 
 function evidenceIdentity(url) {
@@ -241,7 +238,7 @@ function evidenceIdentity(url) {
   return host + path + '?' + new URLSearchParams(query) + url.hash;
 }
 
-function evidenceLinks(links, original, originalSource) {
+function evidenceLinks(links, original, originalSource, compact = false) {
   if (!Array.isArray(links)) return '';
   const primary = evidenceIdentity(original);
   const seen = new Set([primary]);
@@ -267,8 +264,8 @@ function evidenceLinks(links, original, originalSource) {
     const title = typeof link.title === 'string' ? link.title : '';
     const source = names.join('、') || (typeof link.source === 'string' ? link.source : '');
     const published = typeof link.published === 'string' ? link.published : '';
-    const label = title || source || '查看来源';
-    const meta = [title && source, published].filter(Boolean).join(' · ');
+    const label = compact ? '节目页' : title || source || '查看来源';
+    const meta = compact ? '' : [title && source, published].filter(Boolean).join(' · ');
     return '<a href="' + escapeHtml(url.href) + '" target="_blank" rel="noopener noreferrer">' +
       escapeHtml(label + timestamp) + ' ' + icon('external') + (meta ? '<small>' + escapeHtml(meta) + '</small>' : '') + '</a>';
   }).join('');
@@ -379,6 +376,7 @@ function cardRows(items, {titlesOnly = false} = {}) {
       return '<a class="source-card update-title-link"' + attributes + '><h3 class="source-title">' +
         escapeHtml(entry.title) + '</h3>' + icon('external') + '</a>';
     }
+    const podcast = key === 'podcasts';
     const revision = entry.revision
       ? '<span class="source-revision">已修订 ' + escapeHtml(entry.revision.version) + '</span>'
       : '';
@@ -407,11 +405,11 @@ function cardRows(items, {titlesOnly = false} = {}) {
       highlights +
       '<p class="source-summary"' + (passage ? ' data-matched-passage="true"' : '') + attributesForAbstract + '>' + escapeHtml(excerpt) + '</p>' +
       cardDetails(key, entry) +
-      '<div class="source-meta"><span class="byline">' + escapeHtml(entry.source) + '</span>' +
-      '<span class="source-out">打开原文 ' + icon('external') + '</span></div></div></a>';
-    const alternatives = evidenceLinks(entry.evidence, anchor, entry.source) +
+      '<div class="source-meta">' + (podcast ? podcastByline(entry) : '<span class="byline">' + escapeHtml(entry.source) + '</span>') +
+      '<span class="source-out">' + (podcast ? '观看节目 ' : '打开原文 ') + icon('external') + '</span></div></div></a>';
+    const alternatives = evidenceLinks(entry.evidence, anchor, entry.source, podcast) +
       (votes !== undefined ? '<a href="https://huggingface.co/papers/' + encodeURIComponent(entry.id) + '" target="_blank" rel="noopener noreferrer">Hugging Face 投票页 ' + icon('external') + '</a>' : '');
-    return '<article class="source-record">' + card + abstract +
+    return '<article class="source-record" data-channel="' + key + '">' + card + abstract +
       (alternatives ? '<div class="source-evidence" aria-label="其他来源">' + alternatives + '</div>' : '') + '</article>';
   }).join('');
 }
@@ -601,6 +599,7 @@ function sourceDetails(module) {
   if (!module.sources?.length) return '';
   const labels = {ok:'已检查',partial:'部分收录',failed:'暂未读到',unconfigured:'待配置'};
   const list = module.sources.map(s => '<li>' + escapeHtml(s.account || s.name || s.id) +
+    (module.file === 'wechat.json' && s.platform ? ' · ' + (s.platform === 'rss' ? '公开 RSS' : '微信读书') : '') +
     ' · ' + (labels[s.status] || '待核验') + '</li>').join('');
   const baseline = (module.accounts || []).map(a => '<li><a href="https://www.xiaohongshu.com/user/profile/' +
     encodeURIComponent(a.id) + '">' + escapeHtml(a.name) + '</a> · 已记录 ' + a.baseline.length + ' 篇笔记<ul>' +

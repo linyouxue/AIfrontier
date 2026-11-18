@@ -64,6 +64,10 @@ def comparable(value):
     return normalize("NFKC", clean(value))
 
 
+def reader_publisher_id(book):
+    return b64encode(book.removeprefix("MP_WXS_").encode("ascii")).decode("ascii")
+
+
 def read(url):
     request = Request(url, headers={"User-Agent": "AIfrontier/0.1 (+https://github.com/linyouxue/AIfrontier)"})
     with urllib.request.urlopen(request, timeout=12) as response:
@@ -230,7 +234,8 @@ def parse_original(raw, requested, verified, candidate_title, candidate_time, ac
 
 
 def feed_items(account, feed):
-    _, xml = read(f"https://wechat2rss.xlab.app/feed/{feed}.xml")
+    url = feed if feed.startswith("https://") else f"https://wechat2rss.xlab.app/feed/{feed}.xml"
+    _, xml = read(url)
     channel = ET.fromstring(xml).find("channel")
     if channel is None or comparable(channel.findtext("title", "")) != comparable(account):
         raise ValueError("RSS account mismatch")
@@ -293,7 +298,7 @@ def reader_request(opener, cookie, resource, params):
         return response.read()
 
 
-def reader_candidate(book, account, previous, items, cookie, opener, first, last, source):
+def reader_candidate(book, account, previous, items, keys_by_alias, cookie, opener, first, last, source):
     cover = json.loads(reader_request(opener, cookie, "/api/mp/cover", {"bookId": book}))
     if not isinstance(cover, dict):
         raise ValueError("invalid reader response")
@@ -307,29 +312,35 @@ def reader_candidate(book, account, previous, items, cookie, opener, first, last
     if not isinstance(review, str) or not re.fullmatch(re.escape(book) + r"_[A-Za-z0-9_~-]+", review) or not title:
         raise ValueError("missing reader cover")
     source["discovered"] = 1
-    saved_id = previous.get("articleId")
-    if (previous.get("reviewId") == review and saved_id in items and comparable(items[saved_id]["title"]) == comparable(title)
-            and items[saved_id]["source"] == account):
+    short = article_link(WECHAT + "/s/" + review[len(book) + 1:])
+    saved_id = keys_by_alias.get(short[0])
+    if not saved_id and previous.get("reviewId") == review:
+        saved_id = previous.get("articleId")
+    if (saved_id in items and items[saved_id]["source"] == account
+            and comparable(items[saved_id]["title"]) == comparable(title)):
         source.update(matched=1, articleId=saved_id, reviewId=review)
         return
     article_page = reader_request(opener, cookie, "/web/mp/content", {"reviewId": review})
-    short = article_link(WECHAT + "/s/" + review[len(book) + 1:])
-    publisher_id = b64encode(book.removeprefix("MP_WXS_").encode("ascii")).decode("ascii")
-    article, _ = parse_original(article_page, short, short, title, None, account, publisher_id)
+    article, aliases = parse_original(article_page, short, short, title, None, account, reader_publisher_id(book))
     if article is None or not first <= article["published"] <= last:
         source["filtered"] = 1
         return
     key = article["id"]
+    if key not in items:
+        key = next((keys_by_alias[alias] for alias in sorted(aliases) if alias in keys_by_alias), key)
     if key in items:
         source["matched"] = 1
     else:
         items[key] = article | {"collected": source["checkedAt"]}
         source["inserted"] = 1
+    keys_by_alias.update((alias, key) for alias in aliases)
     source.update(articleId=key, reviewId=review)
 
 
-def collect_reader(accounts, cookie, items, prior_sources, checked, first, last):
+def collect_reader(accounts, cookie, items, prior_sources, checked, first, last, *, keys_by_alias=None):
     opener = urllib.request.build_opener(NoReaderRedirect())
+    if keys_by_alias is None:
+        keys_by_alias = {key: key for key in items}
     blocked = "" if cookie else "reader authorization missing"
     for account, book in accounts.items():
         if not re.fullmatch(r"MP_WXS_\d+", book):
@@ -343,7 +354,7 @@ def collect_reader(accounts, cookie, items, prior_sources, checked, first, last)
         try:
             if blocked:
                 raise ReaderSessionError(blocked)
-            reader_candidate(book, account, previous, items, cookie, opener, first, last, source)
+            reader_candidate(book, account, previous, items, keys_by_alias, cookie, opener, first, last, source)
         except (OSError, HTTPException, ValueError) as error:
             label = error_label(error)
             if isinstance(error, ReaderSessionError) or isinstance(error, HTTPError) and error.code in {401, 403, 429}:
@@ -372,7 +383,11 @@ def collect(output, reader_cookie=None):
     consecutive_network_errors = 0
     deferred = ""
 
-    for source_id, account, feed, publisher_biz in SOURCES:
+    accounts = json.loads((ROOT / "config" / "wechat-accounts.json").read_text("utf-8"))
+    public_feeds = json.loads((ROOT / "config" / "wechat-public-feeds.json").read_text("utf-8"))
+    added_sources = tuple(("rss:" + accounts[account], account, feed, reader_publisher_id(accounts[account]))
+                          for account, feed in public_feeds.items())
+    for source_id, account, feed, publisher_biz in SOURCES + added_sources:
         source = {"id": source_id, "account": account, "platform": "rss", "status": "ok", "checkedAt": checked,
                   "discovered": 0, "inserted": 0, "matched": 0, "unverified": 0, "filtered": 0}
         if last_success := prior_sources.get(source_id, {}).get("lastSuccessAt"):
@@ -400,6 +415,13 @@ def collect(output, reader_cookie=None):
                 source["newestCandidateAt"] = max(published_at, source.get("newestCandidateAt", published_at))
                 source["oldestCandidateAt"] = min(published_at, source.get("oldestCandidateAt", published_at))
                 source["discovered"] += 1
+                link = candidate.findtext("link", "").replace("http://mp.weixin.qq.com/", "https://mp.weixin.qq.com/", 1)
+                original = article_link(link)
+                previous = items.get(keys_by_alias.get(original[0])) if original else None
+                if (previous and previous["source"] == account
+                        and comparable(previous["title"]) == comparable(candidate.findtext("title", ""))):
+                    source["matched"] += 1
+                    continue
                 try:
                     article, aliases = feed_article(candidate, account, published,
                                                     public_biz=publisher_biz, deferred=deferred)
@@ -437,8 +459,10 @@ def collect(output, reader_cookie=None):
         print(json.dumps(source, ensure_ascii=True))
 
     if reader_cookie is not None:
-        accounts = json.loads((ROOT / "config" / "wechat-accounts.json").read_text("utf-8"))
-        sources.extend(collect_reader(accounts, reader_cookie, items, prior_sources, checked, first_day, today))
+        # WeRead can see a newer post before it reaches RSS. Check its cover,
+        # then fetch the article only when the review still needs to be matched.
+        sources.extend(collect_reader(accounts, reader_cookie, items, prior_sources, checked, first_day, today,
+                                      keys_by_alias=keys_by_alias))
     published_items = sorted(items.values(), key=lambda item: (item["published"], item["id"]), reverse=True)
     output.mkdir(parents=True, exist_ok=True)
     with NamedTemporaryFile(mode="w", encoding="utf-8", dir=output, delete=False) as file:

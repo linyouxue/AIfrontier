@@ -262,6 +262,15 @@ time { font-variant-numeric: tabular-nums; }
 .source-evidence a { align-content: center; min-height: 44px; color: var(--lavender); font-size: .87rem; overflow-wrap: anywhere; }
 .source-evidence .icon { width: 13px; vertical-align: -.18em; }
 .source-evidence small { display: block; padding-block: 3px; color: var(--muted); font-size: .81rem; }
+.source-record[data-channel="podcasts"], .source-record[data-channel="podcasts"] .source-card,
+.source-record[data-channel="podcasts"] .source-copy { display: flex; flex-direction: column; }
+.source-record[data-channel="podcasts"] .source-card, .source-record[data-channel="podcasts"] .source-copy { flex: 1; }
+.source-record[data-channel="podcasts"] .source-meta { margin-top: auto; padding-top: 14px; align-items: flex-start; }
+.podcast-byline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 12px; min-width: 0; }
+.podcast-byline strong { color: var(--body); font-weight: 650; }
+.source-record[data-channel="podcasts"] .source-out { color: var(--channel); }
+.source-record[data-channel="podcasts"] .source-evidence { justify-content: flex-end; }
+.source-record[data-channel="podcasts"] .source-evidence a { color: var(--muted); }
 .empty-state, .module-notice { padding: 18px; border: 1px solid var(--rule-soft); border-radius: 12px; background: var(--surface); color: var(--body); }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 8px 15px; border: 1px solid transparent; border-radius: 99px; font-size: .93rem; font-weight: 630; line-height: 1.35; transition: transform .14s, background-color .15s; }
 .button:active { transform: scale(.98); }
@@ -294,6 +303,7 @@ time { font-variant-numeric: tabular-nums; }
 .module-notice { margin-bottom: 13px; }
 .entries-block { min-width: 0; }
 .module-layout:not(:has(.direction-block)) .entries-block .source-cards { grid-template-columns: repeat(2,minmax(0,1fr)); align-items: start; }
+.module-page[data-channel="podcasts"] .module-layout .entries-block .source-cards { align-items: stretch; }
 .site-footer { margin-top: 40px; padding: 16px 0 25px; border-top: 1px solid var(--rule-soft); }
 .site-footer > a { color: var(--muted); font-size: 1.5rem; min-height: 44px; }
 .update-sheet { position: fixed; inset: auto 0 max(24px,env(safe-area-inset-bottom)); width: min(calc(100% - 32px), 550px); max-height: min(78dvh,550px); margin: 0 auto; padding: 12px 24px 23px; overflow-y: auto; overscroll-behavior: contain; border: 1px solid var(--rule); border-radius: 20px; color: var(--fg); background: var(--surface); box-shadow: 0 20px 65px #0e081c30; }

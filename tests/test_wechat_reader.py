@@ -31,6 +31,13 @@ class ReaderCollectionTest(unittest.TestCase):
             second = run({first["id"]: first})
         self.assertEqual(second["matched"], 1)
         self.assertEqual(fetch.call_count, 1)
+        with patch.object(collector, "reader_request", return_value=cover) as fetch:
+            covered = list(collector.collect_reader(
+                accounts, "test-session", items, {}, "2026-01-10T00:00:00+00:00", "2025-10-10", "2026-01-10",
+                keys_by_alias={"wechat:a~b": article["id"]},
+            ))[0]
+        self.assertEqual((covered["matched"], covered["inserted"]), (1, 0))
+        self.assertEqual(fetch.call_count, 1)
         with patch.object(collector, "reader_request", side_effect=[cover, document.replace(b"MTIz", b"MTI0")]):
             mismatch = run({})
         self.assertEqual(mismatch["status"], "partial")

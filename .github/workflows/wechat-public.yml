@@ -2,6 +2,11 @@ name: Refresh AIfrontier publications
 
 on:
   workflow_dispatch:
+    inputs:
+      force_arxiv:
+        description: Recheck official arXiv announcements even if today's batch was verified
+        type: boolean
+        default: false
   schedule:
     - cron: '27 */4 * * *'
 
@@ -121,6 +126,7 @@ jobs:
         id: papers
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          FORCE_ARXIV: ${{ inputs.force_arxiv }}
         run: python3 -u scripts/publish_papers.py
       - name: Report source coverage
         id: report

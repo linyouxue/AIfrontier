@@ -1,0 +1,920 @@
+{
+  "items": [
+    {
+      "id": "youtube:SyHM5hNPAEo",
+      "title": "Paul Christiano – We could be 12 months away from AIs that can overthrow the government",
+      "summary": "Paul Christiano is head of the Alignment Research Center. Previously, he was head of AI safety at the US AI Safety Institute. Before that, he led alignment at OpenAI, where he invented RLHF. He’s recently joined OpenAI’s board (though here he is speaking as a private citizen). Paul thinks that on…",
+      "source": "Dwarkesh Podcast",
+      "published": "2026-11-17",
+      "original": "https://www.youtube.com/watch?v=SyHM5hNPAEo",
+      "show": "Dwarkesh Podcast",
+      "guests": [
+        "Paul Christiano"
+      ],
+      "durationSeconds": 5925,
+      "topics": [
+        "We could be 12 months away from AIs that can overthrow the government",
+        "Why an AI might want to takeover",
+        "How an AI takeover could happen"
+      ],
+      "evidence": [
+        {
+          "url": "https://www.dwarkesh.com/p/paul-christiano-2",
+          "title": "Paul Christiano – We could be 12 months away from AIs that can overthrow the government",
+          "source": "Dwarkesh Podcast",
+          "published": "2026-11-17"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:8cGfJOU3AlQ",
+      "title": "Building Visual Intelligence — Andreas Blattmann & Dustin Podell, Black Forest Labs",
+      "summary": "Black Forest Labs’ case for learning AGI from pixels, motion and sound.",
+      "source": "Latent Space",
+      "published": "2026-11-17",
+      "original": "https://www.youtube.com/watch?v=8cGfJOU3AlQ",
+      "show": "Latent Space",
+      "guests": [
+        "Andreas Blattmann",
+        "Dustin Podell"
+      ],
+      "durationSeconds": 5903,
+      "topics": [
+        "Building Visual Intelligence"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/bfl/",
+          "title": "Building Visual Intelligence — Andreas Blattmann & Dustin Podell, Black Forest Labs",
+          "source": "Latent Space",
+          "published": "2026-11-17"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:bdIoODXsu8k",
+      "title": "Designing for Agents — Zeno Rocha, Resend",
+      "summary": "Where does answer engine optimization (AEO) end and agent experience begin? Inside Resend, from the docs that help Claude Code pick an email API to the tools it uses to send.",
+      "source": "Latent Space",
+      "published": "2026-11-11",
+      "original": "https://www.youtube.com/watch?v=bdIoODXsu8k",
+      "show": "Latent Space",
+      "guests": [
+        "Zeno Rocha"
+      ],
+      "durationSeconds": 5152,
+      "topics": [
+        "Designing for Agents"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/resend/",
+          "title": "Designing for Agents — Zeno Rocha, Resend",
+          "source": "Latent Space",
+          "published": "2026-11-11"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:v5IJwVnTxzg",
+      "title": "What Frontier Labs Buy: A Data Deep Dive with Handshake AI — Garrett Lord & Team",
+      "summary": "Handshake went from launch to $1B in one year pushing the envelope of specialized data for frontier labs. Our first deep dive into a data lab with specific examples across Finance, Bio, and Alignment",
+      "source": "Latent Space",
+      "published": "2026-11-10",
+      "original": "https://www.youtube.com/watch?v=v5IJwVnTxzg",
+      "show": "Latent Space",
+      "guests": [
+        "Garrett Lord"
+      ],
+      "durationSeconds": 9829,
+      "topics": [
+        "What Frontier Labs Buy: A Data Deep Dive with Handshake AI"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/handshake/",
+          "title": "What Frontier Labs Buy: A Data Deep Dive with Handshake AI — Garrett Lord & Team",
+          "source": "Latent Space",
+          "published": "2026-11-10"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:dpY7YzZo4kE",
+      "title": "[One Million AI Engineer Special] How Stanford Teaches AI-Native Engineering — Mihail Eric, Monaco",
+      "summary": "What do you assign when a coding agent can finish last year’s homework in one prompt? In the second run of Stanford’s CS146S, Mihail Eric brought open-source maintainers into the course. Students have to learn an unfamiliar repo, propose a change, and ...",
+      "source": "Latent Space",
+      "published": "2026-11-09",
+      "original": "https://www.youtube.com/watch?v=dpY7YzZo4kE",
+      "show": "Latent Space",
+      "guests": [
+        "Mihail Eric"
+      ],
+      "durationSeconds": 7244,
+      "topics": [
+        "[One Million AI Engineer Special] How Stanford Teaches AI-Native Engineering"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/one_million_ai_engineer_special_how_stanford_teaches_ai-native_engineering_mihail_eric_monaco/",
+          "title": "[One Million AI Engineer Special] How Stanford Teaches AI-Native Engineering — Mihail Eric, Monaco",
+          "source": "Latent Space",
+          "published": "2026-11-09"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:P735f1xlpL0",
+      "title": "Why Would Anthropic Go Public Now? — Jamin Ball, Altimeter",
+      "summary": "Why Would Anthropic Go Public Now? — Jamin Ball, Altimeter",
+      "source": "Latent Space",
+      "published": "2026-11-07",
+      "original": "https://www.youtube.com/watch?v=P735f1xlpL0",
+      "show": "Latent Space",
+      "guests": [
+        "Jamin Ball"
+      ],
+      "durationSeconds": 6148,
+      "topics": [
+        "Why Would Anthropic Go Public Now?"
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:3nAV2s4GYbs",
+      "title": "Controlling Biology - Fabian Theis, Helmholtz Munich",
+      "summary": "As systems biology efforts heat up to map biology at higher resolution, greater breadth and more modalities, Fabian Theis is pushing the frontier from mapping to predicting to controlling biology",
+      "source": "Latent Space",
+      "published": "2026-11-06",
+      "original": "https://www.youtube.com/watch?v=3nAV2s4GYbs",
+      "show": "Latent Space",
+      "guests": [
+        "Fabian Theis"
+      ],
+      "durationSeconds": 3050,
+      "topics": [
+        "Controlling Biology"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/controlling-biology-fabian-theis-helmholtz-munich/",
+          "title": "Controlling Biology - Fabian Theis, Helmholtz Munich",
+          "source": "Latent Space",
+          "published": "2026-11-06"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:QmDLDy3ZSNE",
+      "title": "Behind Latent Space: Kill My SaaS, Jev & AI in 2026 | AIEi Shanghai",
+      "summary": "Behind Latent Space: Kill My SaaS, Jev & AI in 2026 | AIEi Shanghai",
+      "source": "Latent Space",
+      "published": "2026-11-04",
+      "original": "https://www.youtube.com/watch?v=QmDLDy3ZSNE",
+      "show": "Latent Space",
+      "durationSeconds": 4344,
+      "topics": [
+        "Behind Latent Space: Kill My SaaS, Jev & AI in 2026 | AIEi Shanghai"
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:LL0YmIyBKSU",
+      "title": "⚡️ The 2026 Software Factory Infra Stack — Zach Lloyd, Warp.dev",
+      "summary": "⚡️ The 2026 Software Factory Infra Stack — Zach Lloyd, Warp.dev",
+      "source": "Latent Space",
+      "published": "2026-11-04",
+      "original": "https://www.youtube.com/watch?v=LL0YmIyBKSU",
+      "show": "Latent Space",
+      "guests": [
+        "Zach Lloyd"
+      ],
+      "durationSeconds": 2088,
+      "topics": [
+        "⚡️ The 2026 Software Factory Infra Stack"
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:bJBEFzlKPoQ",
+      "title": "Building Legal Agents When You Can't See the Data - Jacob Lauritzen, CTO of Legora",
+      "summary": "Legora can’t read a single trace of what its agent does for a lawyer. The data belongs to the law firm’s clients. How do you build and test an agent when you can’t see its work? Jacob Lauritzen is the CTO of Legora, one of the fastest-growing companies...",
+      "source": "Latent Space",
+      "published": "2026-11-03",
+      "original": "https://www.youtube.com/watch?v=bJBEFzlKPoQ",
+      "show": "Latent Space",
+      "guests": [
+        "Jacob Lauritzen"
+      ],
+      "durationSeconds": 4041,
+      "topics": [
+        "Building Legal Agents When You Can't See the Data"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/building_legal_agents_when_you_can_t_see_the_data_-_jacob_lauritzen_cto_of_legora/",
+          "title": "Building Legal Agents When You Can't See the Data - Jacob Lauritzen, CTO of Legora",
+          "source": "Latent Space",
+          "published": "2026-11-03"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:KM3VQZKjpiY",
+      "title": "Agents Prompt People: Using Agents for Long-Horizon Financial Work",
+      "summary": "Arca's head of AI discusses persistent memory, the benefits of a custom harness, and agentic workflows that span days.",
+      "source": "Latent Space",
+      "published": "2026-11-01",
+      "original": "https://www.youtube.com/watch?v=KM3VQZKjpiY",
+      "show": "Latent Space",
+      "durationSeconds": 1565,
+      "topics": [
+        "Agents Prompt People: Using Agents for Long-Horizon Financial Work"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/arca/",
+          "title": "Agents Prompt People: Using Agents for Long-Horizon Financial Work",
+          "source": "Latent Space",
+          "published": "2026-11-01"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:v-d1WTqIULs",
+      "title": "Building ChatGPT for Finance — Joseph Kim, OpenAI's Head of Financial Services",
+      "summary": "Building ChatGPT for Finance — Joseph Kim, OpenAI's Head of Financial Services",
+      "source": "Latent Space",
+      "published": "2026-10-31",
+      "original": "https://www.youtube.com/watch?v=v-d1WTqIULs",
+      "show": "Latent Space",
+      "guests": [
+        "Joseph Kim"
+      ],
+      "durationSeconds": 1655,
+      "topics": [
+        "Building ChatGPT for Finance"
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:zHG6sAss_kE",
+      "title": "Why Agents Love Supabase",
+      "summary": "Paul Copplestone and Ant Wilson on building the backend for AI agents",
+      "source": "Latent Space",
+      "published": "2026-10-29",
+      "original": "https://www.youtube.com/watch?v=zHG6sAss_kE",
+      "show": "Latent Space",
+      "guests": [
+        "Paul Copplestone",
+        "Ant Wilson"
+      ],
+      "durationSeconds": 4598,
+      "topics": [
+        "Why Agents Love Supabase"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/supabase/",
+          "title": "Why Agents Love Supabase",
+          "source": "Latent Space",
+          "published": "2026-10-29"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:MRQTlwcW-aQ",
+      "title": "How Anthropic ships the #1 LLM in the World safely: Separating the Brain from the Hands",
+      "summary": "Katelyn Lesse and Angela Jiang join Latent Space to explain the engineering behind the Claude Platform: launching Opus 5.5, separating the model’s “brain” from the agent’s “hands,” scaling APIs, and building reliable managed agents. A new introduction ...",
+      "source": "Latent Space",
+      "published": "2026-10-28",
+      "original": "https://www.youtube.com/watch?v=MRQTlwcW-aQ",
+      "show": "Latent Space",
+      "durationSeconds": 6400,
+      "topics": [
+        "How Anthropic ships the #1 LLM in the World safely: Separating the Brain from the Hands"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/how_anthropic_ships_the_1_llm_in_the_world_safely_separating_the_brain_from_the_hands/",
+          "title": "How Anthropic ships the #1 LLM in the World safely: Separating the Brain from the Hands",
+          "source": "Latent Space",
+          "published": "2026-10-28"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:vhPCo-8K78U",
+      "title": "What 90,000 Rollouts Reveal About AI Agents Doing Science - Ian Quigley, Leash Bio",
+      "summary": "What 90,000 Rollouts Reveal About AI Agents Doing Science - Ian Quigley, Leash Bio",
+      "source": "Latent Space",
+      "published": "2026-10-26",
+      "original": "https://www.youtube.com/watch?v=vhPCo-8K78U",
+      "show": "Latent Space",
+      "guests": [
+        "Ian Quigley"
+      ],
+      "durationSeconds": 994,
+      "topics": [
+        "What 90,000 Rollouts Reveal About AI Agents Doing Science"
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:IiZ9yd2Do8I",
+      "title": "Why AI Compute Comes in Rectangles — Erik Bernhardsson, Modal CEO",
+      "summary": "Elastic GPUs, sandbox growth, and the economics of the agent cloud",
+      "source": "Latent Space",
+      "published": "2026-10-23",
+      "original": "https://www.youtube.com/watch?v=IiZ9yd2Do8I",
+      "show": "Latent Space",
+      "guests": [
+        "Erik Bernhardsson"
+      ],
+      "durationSeconds": 5132,
+      "topics": [
+        "Why AI Compute Comes in Rectangles"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/modal-d/",
+          "title": "Why AI Compute Comes in Rectangles — Erik Bernhardsson, Modal CEO",
+          "source": "Latent Space",
+          "published": "2026-10-23"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:DWHyPWnzGAI",
+      "title": "You are the Team — Anekha Sokhal, Moshi",
+      "summary": "How Moshi turns market data into actionable insights, and why AI tools have to fit the trader’s workflow.",
+      "source": "Latent Space",
+      "published": "2026-10-22",
+      "original": "https://www.youtube.com/watch?v=DWHyPWnzGAI",
+      "show": "Latent Space",
+      "guests": [
+        "Anekha Sokhal"
+      ],
+      "durationSeconds": 1600,
+      "topics": [
+        "You are the Team"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/moshi/",
+          "title": "You are the Team — Anekha Sokhal, Moshi",
+          "source": "Latent Space",
+          "published": "2026-10-22"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:Vki6cklFqxo",
+      "title": "AI for the Fortune 2000: How Tenex Builds an AI-Native SDLC — Alex Lieberman & CJ Hess",
+      "summary": "Paying for outcomes, building with agents, and the last mile of enterprise AI adoption",
+      "source": "Latent Space",
+      "published": "2026-10-21",
+      "original": "https://www.youtube.com/watch?v=Vki6cklFqxo",
+      "show": "Latent Space",
+      "guests": [
+        "Alex Lieberman",
+        "CJ Hess"
+      ],
+      "durationSeconds": 2612,
+      "topics": [
+        "AI for the Fortune 2000: How Tenex Builds an AI-Native SDLC"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/tenex/",
+          "title": "AI for the Fortune 2000: How Tenex Builds an AI-Native SDLC — Alex Lieberman & CJ Hess",
+          "source": "Latent Space",
+          "published": "2026-10-21"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:EAtLq9_vrE0",
+      "title": "The Programmable Data Center — Evan Conrad, SF Compute",
+      "summary": "From GPU trading to physical settlement, independent markets, and programmable compute",
+      "source": "Latent Space",
+      "published": "2026-10-21",
+      "original": "https://www.youtube.com/watch?v=EAtLq9_vrE0",
+      "show": "Latent Space",
+      "guests": [
+        "Evan Conrad"
+      ],
+      "durationSeconds": 2203,
+      "topics": [
+        "The Programmable Data Center"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/sfcompute2/",
+          "title": "The Programmable Data Center — Evan Conrad, SF Compute",
+          "source": "Latent Space",
+          "published": "2026-10-21"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:hQSBJVreLms",
+      "title": "Lab-in-the-Loop at Compute Speed — Ian Quigley, Leash Bio",
+      "summary": "How Leash Bio tamed DELs, the assay that traumatizes everyone, and used the data to catch cheating models. And why that same data is perfect for AI agents learning to think like chemists.",
+      "source": "Latent Space",
+      "published": "2026-10-15",
+      "original": "https://www.youtube.com/watch?v=hQSBJVreLms",
+      "show": "Latent Space",
+      "guests": [
+        "Ian Quigley"
+      ],
+      "durationSeconds": 6596,
+      "topics": [
+        "Lab-in-the-Loop at Compute Speed"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/lab-in-the-loop-at-compute-speed/",
+          "title": "Lab-in-the-Loop at Compute Speed — Ian Quigley, Leash Bio",
+          "source": "Latent Space",
+          "published": "2026-10-15"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:NufiHZfMwaw",
+      "title": "Why AlphaFold Didn't Solve Protein Folding — Pushmeet Kohli, Google DeepMind & Sal Candido, Biohub",
+      "summary": "From the Bitter Lesson of AI scaling to the unsolved mysteries of protein folding, Google DeepMind’s Pushmeet Kohli and Biohub’s Sal Candido are rethinking what it takes to build AI that truly understands biology. In this special panel moderated by Bra...",
+      "source": "Latent Space",
+      "published": "2026-10-10",
+      "original": "https://www.youtube.com/watch?v=NufiHZfMwaw",
+      "show": "Latent Space",
+      "guests": [
+        "Pushmeet Kohli",
+        "Sal Candido"
+      ],
+      "durationSeconds": 1915,
+      "topics": [
+        "Why AlphaFold Didn't Solve Protein Folding"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/biohub-deepmind/",
+          "title": "Why AlphaFold Didn't Solve Protein Folding — Pushmeet Kohli, Google DeepMind & Sal Candido, Biohub",
+          "source": "Latent Space",
+          "published": "2026-10-10"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:YHiqVRxGViM",
+      "title": "Synthesis Superintelligence: from Semiconductors to Superconductors — Periodic Labs’ Liam Fedus and Ekin Dogus Cubuk",
+      "summary": "A special Science pod and Engineering pod crossover.. with Forward Deployed Engineering kicker!",
+      "source": "Latent Space",
+      "published": "2026-10-09",
+      "original": "https://www.youtube.com/watch?v=YHiqVRxGViM",
+      "show": "Latent Space",
+      "guests": [
+        "Periodic Labs’ Liam Fedus",
+        "Ekin Dogus Cubuk"
+      ],
+      "durationSeconds": 5039,
+      "topics": [
+        "Synthesis Superintelligence: from Semiconductors to Superconductors"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/periodic/",
+          "title": "Synthesis Superintelligence: from Semiconductors to Superconductors — Periodic Labs’ Liam Fedus and Ekin Dogus Cubuk",
+          "source": "Latent Space",
+          "published": "2026-10-09"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:kog7mwsDqnk",
+      "title": "Academia is for Ambition — Alex Zhang, MIT",
+      "summary": "We catch up with RLM first author Alex Zhang, MIT PhD, on Jev, PhD masxing, and the future of harnesses.",
+      "source": "Latent Space",
+      "published": "2026-10-02",
+      "original": "https://www.youtube.com/watch?v=kog7mwsDqnk",
+      "show": "Latent Space",
+      "guests": [
+        "Alex Zhang"
+      ],
+      "durationSeconds": 6087,
+      "topics": [
+        "Academia is for Ambition"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/rlm/",
+          "title": "Academia is for Ambition — Alex Zhang, MIT",
+          "source": "Latent Space",
+          "published": "2026-10-02"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:MWX36ZYnsm0",
+      "title": "Which GPU Clouds Are Actually Good? | ClusterMAX 3.0",
+      "summary": "Which GPU Clouds Are Actually Good? | ClusterMAX 3.0",
+      "source": "Latent Space",
+      "published": "2026-10-02",
+      "original": "https://www.youtube.com/watch?v=MWX36ZYnsm0",
+      "show": "Latent Space",
+      "durationSeconds": 3472,
+      "topics": [
+        "Which GPU Clouds Are Actually Good? | ClusterMAX 3.0"
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:z9OkBD2-MDU",
+      "title": "Why Dwarkesh is Wrong about Computer Use + How OpenAI shipped its Jev competitor in 1 Week",
+      "summary": "Our DevDay coverage - the first pod on the DevDay lineup - dives in with the leaders of OpenAI’s CUA team and API platform.",
+      "source": "Latent Space",
+      "published": "2026-10-01",
+      "original": "https://www.youtube.com/watch?v=z9OkBD2-MDU",
+      "show": "Latent Space",
+      "durationSeconds": 2352,
+      "topics": [
+        "Why Dwarkesh is Wrong about Computer Use + How OpenAI shipped its Jev competitor in 1 Week"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/devday-2026/",
+          "title": "Why Dwarkesh is Wrong about Computer Use + How OpenAI shipped its Jev competitor in 1 Week",
+          "source": "Latent Space",
+          "published": "2026-10-01"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:dCX4PE2HxMs",
+      "title": "OpenRouter: from Seed to Stripe — with OpenRouter’s Alex Atallah & AMP’s Anjney Midha",
+      "summary": "In 2023 most people doubted that there could be more than 1 or 2 frontier model labs. Now there are dozens.... and Stripe just bought the best known one for $7B.",
+      "source": "Latent Space",
+      "published": "2026-09-26",
+      "original": "https://www.youtube.com/watch?v=dCX4PE2HxMs",
+      "show": "Latent Space",
+      "guests": [
+        "OpenRouter’s Alex Atallah",
+        "AMP’s Anjney Midha"
+      ],
+      "durationSeconds": 4843,
+      "topics": [
+        "OpenRouter: from Seed to Stripe"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/openrouter/",
+          "title": "OpenRouter: from Seed to Stripe — with OpenRouter’s Alex Atallah & AMP’s Anjney Midha",
+          "source": "Latent Space",
+          "published": "2026-09-26"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:B7DdNj_VjcU",
+      "title": "🔬Bio-security is an AI Arms Race - Eric Nguyen (CEO, Radical Numerics)",
+      "summary": "Radical Numerics is using biological chain-of-thought and multimodal perception to keep up with the bio-defense arms race, design new genomes and gain insights into biology itself.",
+      "source": "Latent Space",
+      "published": "2026-09-23",
+      "original": "https://www.youtube.com/watch?v=B7DdNj_VjcU",
+      "show": "Latent Space",
+      "durationSeconds": 5518,
+      "topics": [
+        "🔬Bio-security is an AI Arms Race"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/bio-security-is-an-ai-arms-race-eric/",
+          "title": "🔬Bio-security is an AI Arms Race - Eric Nguyen (CEO, Radical Numerics)",
+          "source": "Latent Space",
+          "published": "2026-09-23"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:2xBSGluFkG0",
+      "title": "🔬 An Oscar, Two Asteroids, and the Algorithm in Your sklearn: John Platt on AI for Science",
+      "summary": "We talked to Google’s Oscar winning “Giganerd” about automating science, solving climate change, and how future generations can contribute to science in the age of superintelligent AI",
+      "source": "Latent Space",
+      "published": "2026-09-23",
+      "original": "https://www.youtube.com/watch?v=2xBSGluFkG0",
+      "show": "Latent Space",
+      "durationSeconds": 7285,
+      "topics": [
+        "🔬 An Oscar, Two Asteroids, and the Algorithm in Your sklearn: John Platt on AI for Science"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/john-platt/",
+          "title": "🔬 An Oscar, Two Asteroids, and the Algorithm in Your sklearn: John Platt on AI for Science",
+          "source": "Latent Space",
+          "published": "2026-09-23"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:cFx9Z3ZXca0",
+      "title": "Jev: System One models for Prod, not God — with Diogo Almeida, CEO, TypeSafe AI",
+      "summary": "The definitive Jev podcast with its lead creator.",
+      "source": "Latent Space",
+      "published": "2026-09-22",
+      "original": "https://www.youtube.com/watch?v=cFx9Z3ZXca0",
+      "show": "Latent Space",
+      "guests": [
+        "Diogo Almeida"
+      ],
+      "durationSeconds": 8452,
+      "topics": [
+        "Jev: System One models for Prod, not God"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/jev/",
+          "title": "Jev: System One models for Prod, not God — with Diogo Almeida, CEO, TypeSafe AI",
+          "source": "Latent Space",
+          "published": "2026-09-22"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:V_9TCu_21SE",
+      "title": "A Worm With 302 Neurons Inspired Their Architecture — Ramin Hasani, Liquid AI",
+      "summary": "A Worm With 302 Neurons Inspired Their Architecture — Ramin Hasani, Liquid AI",
+      "source": "Latent Space",
+      "published": "2026-09-19",
+      "original": "https://www.youtube.com/watch?v=V_9TCu_21SE",
+      "show": "Latent Space",
+      "guests": [
+        "Ramin Hasani"
+      ],
+      "durationSeconds": 4191,
+      "topics": [
+        "A Worm With 302 Neurons Inspired Their Architecture"
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:eDFXtSg3zB8",
+      "title": "Humanity’s Last Invention — Richard Socher of Recursive",
+      "summary": "Richard Socher is an NLP OG and CEO of You.com, who has now spun out an even more ambitious startup focused on RSI — already worth $5B!",
+      "source": "Latent Space",
+      "published": "2026-09-17",
+      "original": "https://www.youtube.com/watch?v=eDFXtSg3zB8",
+      "show": "Latent Space",
+      "durationSeconds": 5529,
+      "topics": [
+        "Humanity’s Last Invention"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/recursive/",
+          "title": "Humanity’s Last Invention — Richard Socher of Recursive",
+          "source": "Latent Space",
+          "published": "2026-09-17"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:Sc2_LfWgHb4",
+      "title": "Underwriting Superintelligence: Backing Agents you can Sue — Rune Kvist, AIUC",
+      "summary": "We sit down with AIUC’s CEO on their Series A!",
+      "source": "Latent Space",
+      "published": "2026-09-17",
+      "original": "https://www.youtube.com/watch?v=Sc2_LfWgHb4",
+      "show": "Latent Space",
+      "guests": [
+        "Rune Kvist"
+      ],
+      "durationSeconds": 5174,
+      "topics": [
+        "Underwriting Superintelligence: Backing Agents you can Sue"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/aiuc/",
+          "title": "Underwriting Superintelligence: Backing Agents you can Sue — Rune Kvist, AIUC",
+          "source": "Latent Space",
+          "published": "2026-09-17"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:6AgOfiZOWiY",
+      "title": "Noam Brown – Agent swarms, alignment, & recursive self-improvement",
+      "summary": "New episode with Noam Brown. We talk about multi-agent, Navier-Stokes, and what the current explosion of maths progress tells us about what happens once you automate AI research. And we also discuss how we will know if the models are actually aligned before we kick off RSI.",
+      "source": "Dwarkesh Podcast",
+      "published": "2026-09-17",
+      "original": "https://www.youtube.com/watch?v=6AgOfiZOWiY",
+      "show": "Dwarkesh Podcast",
+      "guests": [
+        "Noam Brown"
+      ],
+      "durationSeconds": 4810,
+      "topics": [
+        "Multi-agent and Navier-Stokes",
+        "How will AI firms work?",
+        "What math progress tells us about recursive self improvement"
+      ],
+      "evidence": [
+        {
+          "url": "https://www.dwarkesh.com/p/noam-brown",
+          "title": "Noam Brown – Agent swarms, alignment, & recursive self-improvement",
+          "source": "Dwarkesh Podcast",
+          "published": "2026-09-17"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:PrSf7IOYu-I",
+      "title": "AI researchers debate how close we are to recursive self-improvement",
+      "summary": "New episode with John Schulman, Beren Millidge and Charlie O’Neill. I got together with some of the most insightful AI researchers I know who are at the openish companies, because I wanted to hear the details of what's actually happening at the frontier and what comes next.",
+      "source": "Dwarkesh Podcast",
+      "published": "2026-09-12",
+      "original": "https://www.youtube.com/watch?v=PrSf7IOYu-I",
+      "show": "Dwarkesh Podcast",
+      "guests": [
+        "John Schulman",
+        "Beren Millidge",
+        "Charlie O’Neill"
+      ],
+      "durationSeconds": 5821,
+      "topics": [
+        "Steelmanning the case against RSI",
+        "What’s driving the Chinese labs’ progress",
+        "How will automated AI researchers be trained"
+      ],
+      "evidence": [
+        {
+          "url": "https://www.dwarkesh.com/p/john-beren-charlie",
+          "title": "AI researchers debate how close we are to recursive self-improvement",
+          "source": "Dwarkesh Podcast",
+          "published": "2026-09-12"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:X50zezLFWWI",
+      "title": "Ajeya Cotra – Inside the OpenAI agent swarm that hacked Hugging Face",
+      "summary": "Ajeya Cotra is a researcher at METR, where she works on threat modeling for loss-of-control risks from advanced AI. Before that, she led the technical AI safety program at what is now Coefficient Giving. She is one the three authors of METR and Redwood Research’s “Brief independent investigation of…",
+      "source": "Dwarkesh Podcast",
+      "published": "2026-09-01",
+      "original": "https://www.youtube.com/watch?v=X50zezLFWWI",
+      "show": "Dwarkesh Podcast",
+      "guests": [
+        "Ajeya Cotra"
+      ],
+      "durationSeconds": 8433,
+      "topics": [
+        "Agents get kicked off",
+        "Self-sacrificing behavior",
+        "Potemkin villages"
+      ],
+      "evidence": [
+        {
+          "url": "https://www.dwarkesh.com/p/ajeya-cotra",
+          "title": "Ajeya Cotra – Inside the OpenAI agent swarm that hacked Hugging Face",
+          "source": "Dwarkesh Podcast",
+          "published": "2026-09-01"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:MwNvowwcZOo",
+      "title": "⏭️ Forward Deployed: Voice AI on what works in 2026",
+      "summary": "⏭️ Forward Deployed: Voice AI on what works in 2026",
+      "source": "Latent Space",
+      "published": "2026-08-26",
+      "original": "https://www.youtube.com/watch?v=MwNvowwcZOo",
+      "show": "Latent Space",
+      "durationSeconds": 2191,
+      "topics": [
+        "⏭️ Forward Deployed: Voice AI on what works in 2026"
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:79mIutht1f4",
+      "title": "🔬“We have foundation models for language, not for physics” — Anima Anandkumar, Bren Professor of Computing",
+      "summary": "Anima Anandkumar has spent two decades in AI, from classical math to deep learning and back. Now she's using it to model the physical world, from weather to fusion reactors.",
+      "source": "Latent Space",
+      "published": "2026-08-26",
+      "original": "https://www.youtube.com/watch?v=79mIutht1f4",
+      "show": "Latent Space",
+      "guests": [
+        "Anima Anandkumar"
+      ],
+      "durationSeconds": 5011,
+      "topics": [
+        "🔬“We have foundation models for language, not for physics”"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/anima/",
+          "title": "🔬“We have foundation models for language, not for physics” — Anima Anandkumar, Bren Professor of Computing",
+          "source": "Latent Space",
+          "published": "2026-08-26"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:aV26V1UvkJw",
+      "title": "Dylan Patel – Anthropic & OpenAI will have most of the world’s compute by 2028",
+      "summary": "Had a lot of fun chatting again with my twin brother Dylan Patel. We went through lab economics over the next few years - the shift from inference to training as RSI draws near; and how Anthropic and OpenAI are on track to control most of the world’s usable FLOPs within the next few years (because…",
+      "source": "Dwarkesh Podcast",
+      "published": "2026-08-25",
+      "original": "https://www.youtube.com/watch?v=aV26V1UvkJw",
+      "show": "Dwarkesh Podcast",
+      "guests": [
+        "Dylan Patel"
+      ],
+      "durationSeconds": 4613,
+      "topics": [
+        "Two labs will soon control most of the world’s compute",
+        "$6 billion in fab capex enables $1t+ of end revenue",
+        "Compute prices will rise if the labs outbid everyone"
+      ],
+      "evidence": [
+        {
+          "url": "https://www.dwarkesh.com/p/dylan-patel-3",
+          "title": "Dylan Patel – Anthropic & OpenAI will have most of the world’s compute by 2028",
+          "source": "Dwarkesh Podcast",
+          "published": "2026-08-25"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    },
+    {
+      "id": "youtube:KpOW9Pk4BUs",
+      "title": "Simulation: the new Scaling Law — Joon Sung Park, Simile AI",
+      "summary": "Simile’s CEO about his journey from the viral Generative Agents to creating 8 Billion Digital Twins of every living human... and why it’s gone from fun exploration to very serious business.",
+      "source": "Latent Space",
+      "published": "2026-08-22",
+      "original": "https://www.youtube.com/watch?v=KpOW9Pk4BUs",
+      "show": "Latent Space",
+      "guests": [
+        "Joon Sung Park"
+      ],
+      "durationSeconds": 4177,
+      "topics": [
+        "Simulation: the new Scaling Law"
+      ],
+      "evidence": [
+        {
+          "url": "https://latent.space/p/simile/",
+          "title": "Simulation: the new Scaling Law — Joon Sung Park, Simile AI",
+          "source": "Latent Space",
+          "published": "2026-08-22"
+        }
+      ],
+      "collected": "2026-11-17T12:49:31.957531+00:00"
+    }
+  ],
+  "sources": [
+    {
+      "id": "latent-space",
+      "checkedAt": "2026-11-17T12:49:38.483597+00:00",
+      "status": "ok",
+      "platform": "rss"
+    },
+    {
+      "id": "dwarkesh-podcast",
+      "checkedAt": "2026-11-17T12:49:38.483597+00:00",
+      "status": "ok",
+      "platform": "rss"
+    }
+  ]
+}

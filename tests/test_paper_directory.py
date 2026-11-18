@@ -36,14 +36,20 @@ class PaperDirectoryTest(unittest.TestCase):
         checked = "2026-11-18T01:00:00+00:00"
         state = dict(papers=[row], taxonomy=TAXONOMY, checkedAt=checked, announcementDate="2026-11-18")
         with TemporaryDirectory() as tmp:
-            output = Path(tmp)
-            publish(output, output, state, {"checkedAt":checked, "votes":{row["id"]:5}},
+            site = Path(tmp)
+            output = site / "papers"
+            for name in ("wechat", "blogs", "social"):
+                (site / (name+".json")).write_text(json.dumps({"items":[], "sources":[{"checkedAt":checked,"status":"ok"}]}))
+            publish(site, output, state, {"checkedAt":checked, "votes":{row["id"]:5}},
                     datetime(2026,11,18,2,tzinfo=timezone.utc))
             index = json.loads((output / "index-data.json").read_bytes())
             self.assertEqual(len(index["rows"]), 1)
             self.assertGreaterEqual(len(index["rows"][0][1]), 2)
-            self.assertIn("HF 推荐 5 票", (output / "index.html").read_text("utf-8"))
+            self.assertEqual(index["rows"][0][-1], 5)
+            self.assertIn("theme-switch", (site / "index.html").read_text("utf-8"))
+            self.assertIn("#/arxiv", (output / "index.html").read_text("utf-8"))
+            self.assertIn("cache", (site / "paper-abstracts" / "0000.json").read_text("utf-8"))
             from search_index import shard_for, tokens
             term = tokens("cache")[0]
-            shard = json.loads((output / "search-index" / f"{shard_for(term):02x}.json").read_bytes())
+            shard = json.loads((site / "search-index" / f"{shard_for(term):02x}.json").read_bytes())
             self.assertIn(term, shard["terms"])

@@ -31,6 +31,27 @@ function expandedSearchWords(text, expansions) {
   return searchWords(text).flatMap(word => expansions.get(word) ?? [word]);
 }
 
+function searchPassage(text, query) {
+  if (!text || !query?.terms.length) return '';
+  let best = '', score = 0;
+  // Keep decimal numbers intact. For a long sentence inspect overlapping word windows.
+  const sentences = text.split(/(?<=[。！？])|(?<=[.!?])\s+(?=[A-Z0-9"“(])/u);
+  for (const sentence of sentences) {
+    for (let pos = 0; pos < sentence.length; pos += 185) {
+      const slice = sentence.slice(pos, pos + 265).trim();
+      const words = new Set(expandedSearchWords(slice, query.expansions));
+      const hits = query.terms.filter(term => words.has(term)).length;
+      if (hits > score) {
+        best = (pos ? '…' : '') + slice + (pos + 265 < sentence.length ? '…' : '');
+        score = hits;
+      }
+      if (hits === query.terms.length) return best;
+      if (pos + 265 >= sentence.length) break;
+    }
+  }
+  return best;
+}
+
 async function fetchSearchFile(name) {
   const response = await fetch('./search-index/' + name, {cache: 'no-cache'});
   if (!response.ok) throw new Error('Search index unavailable');
@@ -80,6 +101,18 @@ async function searchPostings(index, term) {
   return postings;
 }
 
+function loadedSearchScore({key, entry}, query) {
+  const fields = [entry.title, [entry.id, entry.source, modules[key].name, entry.show, ...(entry.guests ?? []),
+    ...(entry.topics ?? []), ...(entry.highlights?.points ?? []), ...(entry.points ?? [])].filter(Boolean).join(' '), entry.summary];
+  const words = fields.map(field => new Set(expandedSearchWords(field, query.expansions)));
+  let score = 0;
+  for (const term of query.terms) {
+    if (!words.some(set => set.has(term))) return 0;
+    score += (words[0].has(term) ? 5 : 0) + (words[1].has(term) ? 4 : 0) + (words[2].has(term) ? 2 : 0);
+  }
+  return score;
+}
+
 async function scoreIndex(index, words) {
   // A span can match its words, a shorter acronym plus surrounding words, or
   // a single acronym. Keep the best complete interpretation for each article.
@@ -104,4 +137,32 @@ async function scoreIndex(index, words) {
     suffix[i] = matches;
   }
   return new Map(Array.from(suffix[0] ?? [], ([doc, score]) => [index.ids[doc], score]));
+}
+
+async function findArticles(text, items, retry = true) {
+  let query = {terms: [], expansions: new Map()};
+  let scores, limited = false;
+  try {
+    const index = await openSearchIndex();
+    const words = expandedSearchWords(text, index.expansions);
+    query = {expansions: index.expansions, terms: [...new Set(words)]};
+    scores = await scoreIndex(index, words);
+  } catch (error) {
+    if (error.cause === 'new-build') {
+      searchManifest = null;
+      if (retry) return findArticles(text, items, false);
+    }
+    limited = true;
+    query.terms = [...new Set(expandedSearchWords(text, query.expansions))];
+  }
+  const matches = [];
+  if (query.terms.length) {
+    const literal = text.toLowerCase();
+    for (const item of items) {
+      const score = limited ? loadedSearchScore(item, query) : scores.get(item.key + ':' + item.entry.id);
+      if (score) matches.push({item, score: score * (item.entry.title.toLowerCase().includes(literal) ? 1.25 : 1)});
+    }
+    matches.sort((a, b) => b.score - a.score); // Stable ties retain publication order.
+  }
+  return {items: matches.map(match => match.item), query, limited};
 }

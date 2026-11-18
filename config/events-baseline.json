@@ -1,0 +1,883 @@
+{
+  "items": [
+    {
+      "id": "event:https://openai.com/index/more-ways-to-move-care-forward-with-chatgpt-for-healthcare",
+      "title": "More ways to move care forward with ChatGPT for Healthcare",
+      "summary": "Introducing computer-use agents, improved clinical answers, and new healthcare plugins that work across healthcare software to get real work done.",
+      "source": "OpenAI News",
+      "published": "2026-11-16",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/more-ways-to-move-care-forward-with-chatgpt-for-healthcare",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/more-ways-to-move-care-forward-with-chatgpt-for-healthcare",
+          "title": "More ways to move care forward with ChatGPT for Healthcare",
+          "source": "OpenAI News",
+          "published": "2026-11-16",
+          "sources": [
+            "OpenAI News",
+            "AI News Digest"
+          ]
+        }
+      ],
+      "announcedAt": "2026-11-16",
+      "digestSummary": "Introducing computer-use agents, improved clinical answers, and new healthcare plugins that work across healthcare software to get real work done.",
+      "points": [
+        "官方发布了 ChatGPT for Healthcare 的三项新功能：computer-use agents（计算机使用代理）、改进的临床回答，以及新的 healthcare plugins（医疗健康插件），这些插件可跨医疗软件使用。",
+        "对读者的实际影响是：按官方表述，这些新功能可在医疗软件之间协同工作，帮助用户完成实际工作。官方材料未说明发布时间、开放对象及具体效果，需以官方进一步说明为准。"
+      ]
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-chatgpt-wallet",
+      "title": "Introducing ChatGPT Wallet",
+      "summary": "Introducing ChatGPT Wallet, a secure way for agents in ChatGPT Work, Codex, and dots to complete purchases with user approval and existing card protections.",
+      "source": "OpenAI News",
+      "published": "2026-11-13",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-chatgpt-wallet",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-chatgpt-wallet",
+          "title": "Introducing ChatGPT Wallet",
+          "source": "OpenAI News",
+          "published": "2026-11-13",
+          "sources": [
+            "OpenAI News",
+            "AI News Digest"
+          ]
+        }
+      ],
+      "announcedAt": "2026-11-13",
+      "digestSummary": "Introducing ChatGPT Wallet, a secure way for agents in ChatGPT Work, Codex, and dots to complete purchases with user approval and existing card protections.",
+      "points": [
+        "官方推出 ChatGPT Wallet，这是让 ChatGPT Work、Codex 和 dots 中的智能体能够完成购买的安全方式。",
+        "实际影响：在上述产品中，智能体完成购买前须经用户批准，并适用现有的卡片保护措施。"
+      ]
+    },
+    {
+      "id": "event:https://api-docs.deepseek.com/zh-cn/updates#发布全家桶应用-api",
+      "title": "发布全家桶应用 API",
+      "summary": "在 DeepSeek App（含网页端）的对话服务中，联网搜索、文件输入、阅读链接、语音交互及安全等能力与模型推理相互配合，构成了用户熟悉的对话体验。今天，我们把这些能力开放给开发者：在原有 API 中开启对应参数，即可获得联网搜索、文件输入、阅读链接等对话功能，相关的工具调用与上下文拼接均由服务端完成。",
+      "source": "DeepSeek 更新日志",
+      "published": "2026-11-13",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://api-docs.deepseek.com/zh-cn/updates/#发布全家桶应用-api",
+      "points": [
+        "在 DeepSeek App（含网页端）的对话服务中，联网搜索、文件输入、阅读链接、语音交互及安全等能力与模型推理相互配合，构成了用户熟悉的对话体验。今天，我们把这些能力开放给开发者：在原有 API 中开启对应参数，即可获得联网搜索、文件输入、阅读链接等对话功能，相关的工具调用与上下文拼接均由服务端完成。"
+      ],
+      "evidence": [
+        {
+          "url": "https://api-docs.deepseek.com/zh-cn/updates/#发布全家桶应用-api",
+          "title": "发布全家桶应用 API",
+          "source": "DeepSeek 更新日志",
+          "published": "2026-11-13"
+        }
+      ],
+      "availableAt": "2026-11-13"
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-businesses-chatgpt",
+      "title": "Introducing Businesses in ChatGPT",
+      "summary": "Manage your business information, get insights about how your business shows up, and turn interest into action in ChatGPT.",
+      "source": "OpenAI News",
+      "published": "2026-11-10",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-businesses-chatgpt",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-businesses-chatgpt",
+          "title": "Introducing Businesses in ChatGPT",
+          "source": "OpenAI News",
+          "published": "2026-11-10",
+          "sources": [
+            "OpenAI News",
+            "AI News Digest"
+          ]
+        }
+      ],
+      "announcedAt": "2026-11-10",
+      "digestSummary": "Manage your business information, get insights about how your business shows up, and turn interest into action in ChatGPT.",
+      "points": [
+        "发布 Businesses in ChatGPT，用于管理企业信息并了解企业在 ChatGPT 中的展示情况。",
+        "读者可在 ChatGPT 中管理企业信息、获取展示洞察，并把关注转化为行动。"
+      ]
+    },
+    {
+      "id": "event:https://openai.com/index/chatgpt-enterprise-aws-marketplace",
+      "title": "ChatGPT Enterprise now available in AWS Marketplace",
+      "summary": "ChatGPT Enterprise is now available through AWS Marketplace, helping organizations simplify procurement through existing AWS purchasing and billing relationships.",
+      "source": "OpenAI News",
+      "published": "2026-11-10",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/chatgpt-enterprise-aws-marketplace",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/chatgpt-enterprise-aws-marketplace",
+          "title": "ChatGPT Enterprise now available in AWS Marketplace",
+          "source": "OpenAI News",
+          "published": "2026-11-10"
+        }
+      ],
+      "announcedAt": "2026-11-10",
+      "availableAt": "2026-11-10",
+      "points": [
+        "ChatGPT Enterprise 现已可通过 AWS Marketplace 提供。",
+        "组织可借助现有的 AWS 采购和计费关系简化 ChatGPT Enterprise 的采购流程。"
+      ]
+    },
+    {
+      "id": "event:https://anthropic.com/news/roadshow-launch",
+      "title": "Anthropic launches roadshow for proposed initial public offering",
+      "summary": "Today Anthropic, PBC launched the roadshow for its proposed initial public offering of its Class A common stock.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-11-10",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/news/roadshow-launch",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/news/roadshow-launch",
+          "title": "Anthropic launches roadshow for proposed initial public offering",
+          "source": "Anthropic Newsroom",
+          "published": "2026-11-10"
+        }
+      ],
+      "announcedAt": "2026-11-10"
+    },
+    {
+      "id": "event:release:anthropic:model:fable-5.2+mythos-5.2",
+      "title": "Introducing Claude Fable 5.2 and Claude Mythos 5.2",
+      "summary": "Our most capable models for daunting technical work, Claude Fable 5.2 and Claude Mythos 5.2 set a new bar in coding, finance, and the sciences.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-11-09",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+      "releaseKey": "anthropic:model:fable-5.2+mythos-5.2",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/claude-fable-and-mythos-5-2",
+          "title": "Introducing Claude Fable 5.2 and Claude Mythos 5.2",
+          "source": "Anthropic Newsroom",
+          "published": "2026-11-09"
+        },
+        {
+          "url": "https://platform.claude.com/docs/en/release-notes/overview?entry=november-9-2026",
+          "title": "Claude Fable 5.2 and Claude Mythos 5.2",
+          "source": "Claude Platform Release Notes",
+          "published": "2026-11-09"
+        }
+      ],
+      "announcedAt": "2026-11-09",
+      "availableAt": "2026-11-09"
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-gpt-6-cyber",
+      "title": "GPT‑6 Cyber: Advancing the frontier of aligned cybersecurity agents",
+      "summary": "Introducing GPT‑6 Cyber, OpenAI’s cybersecurity model for finding exploitable vulnerabilities and developing fixes, trained to stay within authorized scope.",
+      "source": "OpenAI News",
+      "published": "2026-11-05",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-gpt-6-cyber",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-gpt-6-cyber",
+          "title": "GPT‑6 Cyber: Advancing the frontier of aligned cybersecurity agents",
+          "source": "OpenAI News",
+          "published": "2026-11-05"
+        }
+      ],
+      "announcedAt": "2026-11-05"
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-images-2-6",
+      "title": "Introducing Images 2.6",
+      "summary": "Images 2.6 brings faster image generation, GIF creation, more precise editing, and new API controls across ChatGPT, Codex, and the API.",
+      "source": "OpenAI News",
+      "published": "2026-11-04",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-images-2-6",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-images-2-6",
+          "title": "Introducing Images 2.6",
+          "source": "OpenAI News",
+          "published": "2026-11-04"
+        }
+      ],
+      "announcedAt": "2026-11-04"
+    },
+    {
+      "id": "event:https://openai.com/index/daybreak-red-aws-govcloud",
+      "title": "Daybreak Red is now available in AWS GovCloud (US-East)",
+      "summary": "Daybreak Red brings GPT-5.6 Cyber to approved customers in AWS GovCloud (US-East) through Amazon Bedrock for authorized cybersecurity work.",
+      "source": "OpenAI News",
+      "published": "2026-11-04",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/daybreak-red-aws-govcloud",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/daybreak-red-aws-govcloud",
+          "title": "Daybreak Red is now available in AWS GovCloud (US-East)",
+          "source": "OpenAI News",
+          "published": "2026-11-04"
+        }
+      ],
+      "announcedAt": "2026-11-04",
+      "availableAt": "2026-11-04"
+    },
+    {
+      "id": "event:https://youtube.com/watch?v=sFfPkUJd_Jk",
+      "title": "Genie 4: A new generation of world simulation",
+      "summary": "We have started rolling out Genie 4 as a research preview for trusted testers, and it's coming soon to Google AI Ultra subscribers in Project Genie and early access partners of the Gemini API and Google AI Studio.",
+      "source": "Google DeepMind",
+      "published": "2026-10-28",
+      "collected": "2026-11-17T13:11:20.181534+00:00",
+      "original": "https://www.youtube.com/watch?v=sFfPkUJd_Jk",
+      "relatedUrls": [
+        "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation"
+      ],
+      "evidence": [
+        {
+          "url": "https://www.youtube.com/watch?v=sFfPkUJd_Jk",
+          "title": "Genie 4: A new generation of world simulation",
+          "source": "Google DeepMind",
+          "published": "2026-10-28",
+          "discoveredAt": "2026-11-17T13:11:20.181534+00:00"
+        }
+      ]
+    },
+    {
+      "id": "event:https://anthropic.com/news/ai-for-science-expands-foundations-research-institutions",
+      "title": "AI for Science expands to foundations and research institutions",
+      "summary": "We’re highlighting 20 scientific foundations, institutions, and research groups around the world that we’ve partnered with in an expansion of our AI for Science program.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-10-28",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/news/ai-for-science-expands-foundations-research-institutions",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/news/ai-for-science-expands-foundations-research-institutions",
+          "title": "AI for Science expands to foundations and research institutions",
+          "source": "Anthropic Newsroom",
+          "published": "2026-10-28"
+        }
+      ],
+      "announcedAt": "2026-10-28"
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-gpt-6-1-terra",
+      "title": "Introducing GPT-6.1 Terra",
+      "summary": "Delivering fast and capable computer use at scale",
+      "source": "OpenAI News",
+      "published": "2026-10-27",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-gpt-6-1-terra",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-gpt-6-1-terra",
+          "title": "Introducing GPT-6.1 Terra",
+          "source": "OpenAI News",
+          "published": "2026-10-27"
+        }
+      ],
+      "announcedAt": "2026-10-27"
+    },
+    {
+      "id": "event:https://anthropic.com/news/expanding-partnership-gsa",
+      "title": "Expanding our partnership with GSA to bring Claude to all levels of government",
+      "summary": "We are expanding our partnership with the General Services Administration (GSA) through a new agreement that gives government partners a 40% discount on Claude Enterprise, Claude for Government, and the Claude API.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-10-27",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/news/expanding-partnership-gsa",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/news/expanding-partnership-gsa",
+          "title": "Expanding our partnership with GSA to bring Claude to all levels of government",
+          "source": "Anthropic Newsroom",
+          "published": "2026-10-27"
+        }
+      ],
+      "announcedAt": "2026-10-27"
+    },
+    {
+      "id": "event:https://anthropic.com/news/s1-sec",
+      "title": "Anthropic files S-1 with the SEC for proposed initial public offering",
+      "summary": "Today, Anthropic, PBC filed a registration statement on Form S-1 with the U.S. Securities and Exchange Commission relating to its proposed initial public offering of its Class A common stock.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-10-26",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/news/s1-sec",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/news/s1-sec",
+          "title": "Anthropic files S-1 with the SEC for proposed initial public offering",
+          "source": "Anthropic Newsroom",
+          "published": "2026-10-26"
+        }
+      ],
+      "announcedAt": "2026-10-26"
+    },
+    {
+      "id": "event:https://openai.com/index/chatgpt-ads-expands-26-new-countries",
+      "title": "ChatGPT Ads expands to 26 new countries as over 100,000 advertisers have used the platform",
+      "summary": "From local businesses to global brands, more advertisers can now reach people as they explore, compare and decide what to buy in ChatGPT.",
+      "source": "OpenAI News",
+      "published": "2026-10-21",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/chatgpt-ads-expands-26-new-countries",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/chatgpt-ads-expands-26-new-countries",
+          "title": "ChatGPT Ads expands to 26 new countries as over 100,000 advertisers have used the platform",
+          "source": "OpenAI News",
+          "published": "2026-10-21"
+        }
+      ],
+      "announcedAt": "2026-10-21"
+    },
+    {
+      "id": "event:https://api-docs.deepseek.com/zh-cn/updates#开放自研搜索-api",
+      "title": "开放自研搜索 API",
+      "summary": "DeepSeek 网页端与 API 端的搜索能力均由自研 DeepSeek 搜索引擎提供底层支持，稳定处理每天来自全球各地的数亿次搜索请求。DeepSeek 搜索是 AI 原生的通用搜索引擎，索引了全球千亿级网页，支持多语言搜索，实时返回高相关、高权威、高时效的优质结果。针对 SEO 作弊、GEO 操纵和低质 AIGC，我们通过严格的识别机制进行过滤，确保向用户与 LLM 呈现权威可信的信息。使用方式请参考 网页搜索与抓取指南 。",
+      "source": "DeepSeek 更新日志",
+      "published": "2026-10-17",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://api-docs.deepseek.com/zh-cn/updates/#开放自研搜索-api",
+      "points": [
+        "DeepSeek 网页端与 API 端的搜索能力均由自研 DeepSeek 搜索引擎提供底层支持，稳定处理每天来自全球各地的数亿次搜索请求。DeepSeek 搜索是 AI 原生的通用搜索引擎，索引了全球千亿级网页，支持多语言搜索，实时返回高相关、高权威、高时效的优质结果。针对 SEO 作弊、GEO 操纵和低质 AIGC，我们通过严格的识别机制进行过滤，确保向用户与 LLM 呈现权威可信的信息。使用方式请参考 网页搜索与抓取指南 。"
+      ],
+      "evidence": [
+        {
+          "url": "https://api-docs.deepseek.com/zh-cn/updates/#开放自研搜索-api",
+          "title": "开放自研搜索 API",
+          "source": "DeepSeek 更新日志",
+          "published": "2026-10-17"
+        }
+      ]
+    },
+    {
+      "id": "event:https://api-docs.deepseek.com/zh-cn/updates#deepseek-v41-flash-1017-更新",
+      "title": "DeepSeek-V4.1-Flash-1017 更新",
+      "summary": "DeepSeek V4.1 Flash 已升级至 DeepSeek-V4.1-Flash-1017，官方网页端与 APP 模型也已同步更新至新版本。API 调用方式与价格保持不变，仍使用 deepseek-flash 即可访问最新模型。",
+      "source": "DeepSeek 更新日志",
+      "published": "2026-10-17",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://api-docs.deepseek.com/zh-cn/updates/#deepseek-v41-flash-1017-更新",
+      "points": [
+        "DeepSeek V4.1 Flash 已升级至 DeepSeek-V4.1-Flash-1017，官方网页端与 APP 模型也已同步更新至新版本。API 调用方式与价格保持不变，仍使用 deepseek-flash 即可访问最新模型。"
+      ],
+      "evidence": [
+        {
+          "url": "https://api-docs.deepseek.com/zh-cn/updates/#deepseek-v41-flash-1017-更新",
+          "title": "DeepSeek-V4.1-Flash-1017 更新",
+          "source": "DeepSeek 更新日志",
+          "published": "2026-10-17"
+        }
+      ],
+      "availableAt": "2026-10-17"
+    },
+    {
+      "id": "event:https://anthropic.com/news/anthropic-cyber-mission",
+      "title": "Introducing the Anthropic Cyber Mission",
+      "summary": "We’re launching the Anthropic Cyber Mission, a long-term commitment to securing the systems everyone depends on.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-10-08",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/news/anthropic-cyber-mission",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/news/anthropic-cyber-mission",
+          "title": "Introducing the Anthropic Cyber Mission",
+          "source": "Anthropic Newsroom",
+          "published": "2026-10-08"
+        }
+      ],
+      "announcedAt": "2026-10-08"
+    },
+    {
+      "id": "event:release:anthropic:model:haiku-5.5",
+      "title": "Introducing Claude Haiku 5.5",
+      "summary": "Claude Haiku 5.5 is our fastest, most capable small model. Built for high-volume work like summarization, subagents, and browser use.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-10-07",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/claude-haiku-5-5",
+      "releaseKey": "anthropic:model:haiku-5.5",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/claude-haiku-5-5",
+          "title": "Introducing Claude Haiku 5.5",
+          "source": "Anthropic Newsroom",
+          "published": "2026-10-07"
+        },
+        {
+          "url": "https://platform.claude.com/docs/en/release-notes/overview?entry=october-7-2026",
+          "title": "Claude Haiku 5.5",
+          "source": "Claude Platform Release Notes",
+          "published": "2026-10-07"
+        }
+      ],
+      "announcedAt": "2026-10-07"
+    },
+    {
+      "id": "event:https://openai.com/index/gpt-6-for-everyone",
+      "title": "GPT-6 and Intelligent UI for everyone",
+      "summary": "GPT‑6 is rolling out globally in ChatGPT with Intelligent UI, delivering faster responses with visuals and interactive experiences you can explore and use directly.",
+      "source": "OpenAI News",
+      "published": "2026-10-07",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/gpt-6-for-everyone",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/gpt-6-for-everyone",
+          "title": "GPT-6 and Intelligent UI for everyone",
+          "source": "OpenAI News",
+          "published": "2026-10-07"
+        }
+      ],
+      "announcedAt": "2026-10-07"
+    },
+    {
+      "id": "event:https://anthropic.com/news/cyber-verification-program",
+      "title": "Expanding the Cyber Verification Program",
+      "summary": "We’re launching a new, expanded version of our Cyber Verification Program, which makes advanced cyber capabilities and reduced blocking classifiers available to qualifying security professionals.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-10-06",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/news/cyber-verification-program",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/news/cyber-verification-program",
+          "title": "Expanding the Cyber Verification Program",
+          "source": "Anthropic Newsroom",
+          "published": "2026-10-06"
+        }
+      ],
+      "announcedAt": "2026-10-06"
+    },
+    {
+      "id": "event:https://openai.com/index/new-chatgpt-ads-format-and-measurement",
+      "title": "Building advertising for the way people use AI",
+      "summary": "OpenAI introduces a new visual ad format in ChatGPT and expands measurement tools, attribution partnerships, and brand suitability for advertisers.",
+      "source": "OpenAI News",
+      "published": "2026-10-05",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/new-chatgpt-ads-format-and-measurement",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/new-chatgpt-ads-format-and-measurement",
+          "title": "Building advertising for the way people use AI",
+          "source": "OpenAI News",
+          "published": "2026-10-05"
+        }
+      ],
+      "announcedAt": "2026-10-05"
+    },
+    {
+      "id": "event:https://anthropic.com/news/barclays-scales-claude",
+      "title": "Barclays scales Claude to upgrade operations and improve client experience",
+      "summary": "Barclays, the British universal bank, is expanding its strategic collaboration with Anthropic to integrate secure, enterprise-grade AI systems across its global operations.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-10-01",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/news/barclays-scales-claude",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/news/barclays-scales-claude",
+          "title": "Barclays scales Claude to upgrade operations and improve client experience",
+          "source": "Anthropic Newsroom",
+          "published": "2026-10-01"
+        }
+      ],
+      "announcedAt": "2026-10-01"
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-gpt-6-1-sol",
+      "title": "Introducing GPT-6.1 Sol",
+      "summary": "Meet GPT-6.1 Sol: near-Astra intelligence for coding, computer use, and professional work at one-fifth of Astra’s standard API input and output token prices.",
+      "source": "OpenAI News",
+      "published": "2026-09-30",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-gpt-6-1-sol",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-gpt-6-1-sol",
+          "title": "Introducing GPT-6.1 Sol",
+          "source": "OpenAI News",
+          "published": "2026-09-30"
+        }
+      ],
+      "announcedAt": "2026-09-30"
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-dots",
+      "title": "Introducing dots",
+      "summary": "Dots by OpenAI are proactive assistants that can keep working across complex projects and everyday tasks. Learn how dots help you stay in control while work moves forward.",
+      "source": "OpenAI News",
+      "published": "2026-09-29",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-dots",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-dots",
+          "title": "Introducing dots",
+          "source": "OpenAI News",
+          "published": "2026-09-29"
+        }
+      ],
+      "announcedAt": "2026-09-29"
+    },
+    {
+      "id": "event:release:anthropic:model:sonnet-5.5",
+      "title": "Introducing Claude Sonnet 5.5",
+      "summary": "Claude Sonnet 5.5 is a clear upgrade over Claude Sonnet 5, runs 30%+ faster, and costs up to 30% less for most work.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-09-28",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/claude-sonnet-5-5",
+      "releaseKey": "anthropic:model:sonnet-5.5",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/claude-sonnet-5-5",
+          "title": "Introducing Claude Sonnet 5.5",
+          "source": "Anthropic Newsroom",
+          "published": "2026-09-28"
+        },
+        {
+          "url": "https://platform.claude.com/docs/en/release-notes/overview?entry=september-28-2026",
+          "title": "Claude Sonnet 5.5",
+          "source": "Claude Platform Release Notes",
+          "published": "2026-09-28"
+        }
+      ],
+      "announcedAt": "2026-09-28"
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-gpt-6-sol-and-luna",
+      "title": "Introducing GPT-6 Sol and Luna",
+      "summary": "Meet GPT-6 Sol and Luna, two models that bring frontier intelligence to everyday work with different balances of capability and cost.",
+      "source": "OpenAI News",
+      "published": "2026-09-23",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-gpt-6-sol-and-luna",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-gpt-6-sol-and-luna",
+          "title": "Introducing GPT-6 Sol and Luna",
+          "source": "OpenAI News",
+          "published": "2026-09-23"
+        }
+      ],
+      "announcedAt": "2026-09-23"
+    },
+    {
+      "id": "event:https://openai.com/index/chatgpt-ads-expands-southeast-asia-taiwan",
+      "title": "ChatGPT Ads expands to Southeast Asia and Taiwan",
+      "summary": "ChatGPT Ads is expanding to Southeast Asia and Taiwan, giving eligible businesses new ways to reach people across more than 60 countries.",
+      "source": "OpenAI News",
+      "published": "2026-09-23",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/chatgpt-ads-expands-southeast-asia-taiwan",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/chatgpt-ads-expands-southeast-asia-taiwan",
+          "title": "ChatGPT Ads expands to Southeast Asia and Taiwan",
+          "source": "OpenAI News",
+          "published": "2026-09-23"
+        }
+      ],
+      "announcedAt": "2026-09-23"
+    },
+    {
+      "id": "event:release:anthropic:model:opus-5.5",
+      "title": "Introducing Claude Opus 5.5",
+      "summary": "Claude Opus 5.5 leads in agentic coding and knowledge work, and costs 40% less to run than Opus 5 on typical workloads.",
+      "source": "Anthropic Newsroom",
+      "published": "2026-09-22",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://www.anthropic.com/claude-opus-5-5",
+      "releaseKey": "anthropic:model:opus-5.5",
+      "evidence": [
+        {
+          "url": "https://www.anthropic.com/claude-opus-5-5",
+          "title": "Introducing Claude Opus 5.5",
+          "source": "Anthropic Newsroom",
+          "published": "2026-09-22"
+        },
+        {
+          "url": "https://platform.claude.com/docs/en/release-notes/overview?entry=september-22-2026",
+          "title": "Claude Opus 5.5",
+          "source": "Claude Platform Release Notes",
+          "published": "2026-09-22"
+        }
+      ],
+      "announcedAt": "2026-09-22",
+      "availableAt": "2026-09-22"
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-the-agents-api",
+      "title": "Introducing the Agents API",
+      "summary": "Build and launch cloud agents with the Agents API, a managed service powered by the Codex harness for orchestration, long-running sessions, and tool use.",
+      "source": "OpenAI News",
+      "published": "2026-09-10",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-the-agents-api",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-the-agents-api",
+          "title": "Introducing the Agents API",
+          "source": "OpenAI News",
+          "published": "2026-09-10"
+        }
+      ],
+      "announcedAt": "2026-09-10"
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-chatgpt-financial-services",
+      "title": "Introducing ChatGPT for Financial Services",
+      "summary": "Introducing ChatGPT for Financial Services, combining built-in financial data and GPT-6 Astra for research, modeling, and client-ready materials.",
+      "source": "OpenAI News",
+      "published": "2026-09-10",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-chatgpt-financial-services",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-chatgpt-financial-services",
+          "title": "Introducing ChatGPT for Financial Services",
+          "source": "OpenAI News",
+          "published": "2026-09-10"
+        }
+      ],
+      "announcedAt": "2026-09-10"
+    },
+    {
+      "id": "event:https://api-docs.deepseek.com/zh-cn/news/news260910",
+      "title": "DeepSeek V4.1 Flash：更强、更快、更普惠",
+      "summary": "今天，我们正式发布 DeepSeek V4.1 Flash 模型。这是我们全新模型结构系列中的最小尺寸的模型，具备原生多模态视觉理解能力。新模型结构的设计初衷是：能力上限更高、推理速度更快、吞吐更大、可扩展到更大参数模型。",
+      "source": "DeepSeek API Docs",
+      "published": "2026-09-10",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://api-docs.deepseek.com/zh-cn/news/news260910",
+      "relatedUrls": [
+        "https://api-docs.deepseek.com/zh-cn/updates#deepseek-v41-flash-发布"
+      ],
+      "points": [
+        "今天，我们正式发布 DeepSeek V4.1 Flash 模型。这是我们全新模型结构系列中的最小尺寸的模型，具备原生多模态视觉理解能力。新模型结构的设计初衷是：能力上限更高、推理速度更快、吞吐更大、可扩展到更大参数模型。"
+      ],
+      "evidence": [
+        {
+          "url": "https://api-docs.deepseek.com/zh-cn/news/news260910",
+          "title": "DeepSeek V4.1 Flash：更强、更快、更普惠",
+          "source": "DeepSeek API Docs",
+          "published": "2026-09-10"
+        },
+        {
+          "url": "https://api-docs.deepseek.com/zh-cn/updates/#deepseek-v41-flash-发布",
+          "title": "DeepSeek-V4.1-Flash 发布",
+          "source": "DeepSeek 更新日志",
+          "published": "2026-09-10"
+        }
+      ],
+      "announcedAt": "2026-09-10",
+      "availableAt": "2026-09-10"
+    },
+    {
+      "id": "event:https://openai.com/index/introducing-chatgpt-images-2-5",
+      "title": "Introducing ChatGPT Images 2.5",
+      "summary": "ChatGPT Images 2.5 helps turn your ideas, sketches, and reference photos into more personalized, polished images that better reflect your ideas.",
+      "source": "OpenAI News",
+      "published": "2026-09-08",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/introducing-chatgpt-images-2-5",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/introducing-chatgpt-images-2-5",
+          "title": "Introducing ChatGPT Images 2.5",
+          "source": "OpenAI News",
+          "published": "2026-09-08"
+        }
+      ],
+      "announcedAt": "2026-09-08"
+    },
+    {
+      "id": "event:release:anthropic:model:fable-5.1+mythos-5.1",
+      "title": "Claude Fable 5.1 and Claude Mythos 5.1",
+      "summary": "We’ve launched Claude Fable 5.1 (claude-fable-5-1), the successor to Claude Fable 5 for long-running agentic coding, knowledge work, and research. For Project Glasswing participants, we’ve also launched Claude Mythos 5.1 (claude-mythos-5-1). Both models support a 1M token context window by default, 128k max output tokens, and always-on adaptive thinking. They cost $10 / $50 USD per MTok, the same as Claude Fable 5, with cache reads cut to $0.25 USD per MTok. Claude Fable 5.1 is available on the Claude API, Claude in Amazon Bedrock, and Claude Platform on AWS. It’s also on Claude Models on Google Cloud (Google managed) and Claude in Microsoft Foundry. See Claude Fable 5.1 for specifications.",
+      "source": "Claude Platform Release Notes",
+      "published": "2026-09-01",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://platform.claude.com/docs/en/release-notes/overview?entry=september-1-2026",
+      "releaseKey": "anthropic:model:fable-5.1+mythos-5.1",
+      "evidence": [
+        {
+          "url": "https://platform.claude.com/docs/en/release-notes/overview?entry=september-1-2026",
+          "title": "Claude Fable 5.1 and Claude Mythos 5.1",
+          "source": "Claude Platform Release Notes",
+          "published": "2026-09-01"
+        }
+      ],
+      "availableAt": "2026-09-01"
+    },
+    {
+      "id": "event:https://openai.com/index/bringing-chatgpt-for-teachers-to-more-us-school-districts",
+      "title": "Bringing ChatGPT for Teachers to more U.S. school districts",
+      "summary": "ChatGPT for Teachers is expanding to 55 U.S. school systems, bringing secure AI tools, training, and support to over 100,000 more educators and staff.",
+      "source": "OpenAI News",
+      "published": "2026-08-26",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/bringing-chatgpt-for-teachers-to-more-us-school-districts",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/bringing-chatgpt-for-teachers-to-more-us-school-districts",
+          "title": "Bringing ChatGPT for Teachers to more U.S. school districts",
+          "source": "OpenAI News",
+          "published": "2026-08-26"
+        }
+      ],
+      "announcedAt": "2026-08-26"
+    },
+    {
+      "id": "event:https://openai.com/index/gpt-5-6-in-kiro",
+      "title": "Advancing price-performance for developers with GPT‑5.6 in Kiro",
+      "summary": "GPT‑5.6 is now available in Kiro, helping developers plan, build, review, and test software with better price-performance.",
+      "source": "OpenAI News",
+      "published": "2026-08-24",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/gpt-5-6-in-kiro",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/gpt-5-6-in-kiro",
+          "title": "Advancing price-performance for developers with GPT‑5.6 in Kiro",
+          "source": "OpenAI News",
+          "published": "2026-08-24"
+        }
+      ],
+      "announcedAt": "2026-08-24",
+      "availableAt": "2026-08-24"
+    },
+    {
+      "id": "event:https://api-docs.deepseek.com/zh-cn/updates#deepseek-v4-flash-vision-exp-发布",
+      "title": "DeepSeek-V4-Flash-Vision-Exp 发布",
+      "summary": "今天，全新的多模态视觉理解模型 DeepSeek-V4-Flash-Vision-Exp 上线 DeepSeek API 平台，这是一个实验性质的模型，用户可以通过设置 model='deepseek-v4-flash-vision-exp' 访问该模型。",
+      "source": "DeepSeek 更新日志",
+      "published": "2026-08-21",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://api-docs.deepseek.com/zh-cn/updates/#deepseek-v4-flash-vision-exp-发布",
+      "points": [
+        "今天，全新的多模态视觉理解模型 DeepSeek-V4-Flash-Vision-Exp 上线 DeepSeek API 平台，这是一个实验性质的模型，用户可以通过设置 model='deepseek-v4-flash-vision-exp' 访问该模型。"
+      ],
+      "evidence": [
+        {
+          "url": "https://api-docs.deepseek.com/zh-cn/updates/#deepseek-v4-flash-vision-exp-发布",
+          "title": "DeepSeek-V4-Flash-Vision-Exp 发布",
+          "source": "DeepSeek 更新日志",
+          "published": "2026-08-21"
+        }
+      ]
+    },
+    {
+      "id": "event:https://openai.com/index/chatgpt-ads-expands-across-europe",
+      "title": "ChatGPT Ads expands across Europe",
+      "summary": "ChatGPT Ads is expanding to 31 European markets. Learn how advertisers can reach people as they explore, compare options, and make decisions.",
+      "source": "OpenAI News",
+      "published": "2026-08-19",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/chatgpt-ads-expands-across-europe",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/chatgpt-ads-expands-across-europe",
+          "title": "ChatGPT Ads expands across Europe",
+          "source": "OpenAI News",
+          "published": "2026-08-19"
+        }
+      ],
+      "announcedAt": "2026-08-19"
+    },
+    {
+      "id": "event:https://openai.com/index/chatgpt-for-teens",
+      "title": "Introducing ChatGPT for Teens: Built for learning, backed by protections",
+      "summary": "ChatGPT for Teens helps teens learn, think critically, and use AI with confidence, with stronger built-in protections, healthy-use features, and additional controls for parents.",
+      "source": "OpenAI News",
+      "published": "2026-08-18",
+      "collected": "2026-11-17T12:48:17.136535+00:00",
+      "original": "https://openai.com/index/chatgpt-for-teens",
+      "evidence": [
+        {
+          "url": "https://openai.com/index/chatgpt-for-teens",
+          "title": "Introducing ChatGPT for Teens: Built for learning, backed by protections",
+          "source": "OpenAI News",
+          "published": "2026-08-18"
+        }
+      ],
+      "announcedAt": "2026-08-18"
+    }
+  ],
+  "sources": [
+    {
+      "id": "openai-news",
+      "checkedAt": "2026-11-17T13:45:52.735391+00:00",
+      "status": "ok",
+      "platform": "official"
+    },
+    {
+      "id": "anthropic-news",
+      "checkedAt": "2026-11-17T13:45:52.735391+00:00",
+      "status": "ok",
+      "platform": "official"
+    },
+    {
+      "id": "anthropic-release-notes",
+      "checkedAt": "2026-11-17T13:45:52.735391+00:00",
+      "status": "ok",
+      "platform": "official"
+    },
+    {
+      "id": "deepseek-updates",
+      "checkedAt": "2026-11-17T13:45:52.735391+00:00",
+      "status": "ok",
+      "platform": "official"
+    },
+    {
+      "id": "ai-news-digest",
+      "checkedAt": "2026-11-17T13:45:52.735391+00:00",
+      "status": "ok",
+      "platform": "rss"
+    },
+    {
+      "id": "youtube-deepmind",
+      "checkedAt": "2026-11-18T09:21:14.318176+00:00",
+      "status": "ok",
+      "platform": "youtube"
+    },
+    {
+      "id": "bilibili",
+      "checkedAt": "2026-11-17T13:45:52.735391+00:00",
+      "status": "unconfigured",
+      "platform": "bilibili"
+    },
+    {
+      "id": "xiaohongshu",
+      "checkedAt": "2026-11-17T13:45:52.735391+00:00",
+      "status": "unconfigured",
+      "platform": "xiaohongshu"
+    },
+    {
+      "id": "weibo",
+      "checkedAt": "2026-11-17T13:45:52.735391+00:00",
+      "status": "unconfigured",
+      "platform": "weibo"
+    },
+    {
+      "id": "youtube-public-search",
+      "checkedAt": "2026-11-18T09:21:14.318176+00:00",
+      "status": "ok",
+      "platform": "youtube"
+    },
+    {
+      "id": "bilibili-public-search",
+      "checkedAt": "2026-11-18T09:29:03.976579+00:00",
+      "status": "ok",
+      "platform": "bilibili"
+    }
+  ]
+}

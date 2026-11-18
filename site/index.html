@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>AIfrontier · AI 前沿情报</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./search.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+
+  <div class="issue-page">
+    <header class="site-header">
+      <div class="masthead">
+        <button class="menu-button" type="button" aria-label="栏目导航" aria-expanded="false" aria-controls="site-nav">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 5h20M2 12h20M2 19h20"/></svg>
+        </button>
+        <a class="masthead-name" href="#/" aria-label="AIfrontier 首页"><span class="brand-mark" aria-hidden="true"></span><span>AI<i>frontier</i></span></a>
+        <div class="masthead-tools">
+          <div class="theme-switch" role="group" aria-label="阅读模式">
+            <button type="button" data-theme="day" aria-pressed="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M19 5l-1.5 1.5m-11 11L5 19"/></svg>白日</button>
+            <button type="button" data-theme="night" aria-pressed="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14A8.8 8.8 0 0 1 10 3.5 9 9 0 1 0 20.5 14Z"/></svg>黑夜</button>
+          </div>
+        </div>
+      </div>
+      <nav id="site-nav" class="site-nav" aria-label="站点导航"></nav>
+    </header>
+
+    <main id="page" tabindex="-1"><p class="empty-state">正在加载情报…</p></main>
+
+    <footer class="site-footer">
+      <a href="#/" aria-label="AIfrontier 首页">AI<i>frontier</i></a>
+    </footer>
+  </div>
+
+  <p id="status" class="visually-hidden" role="status"></p>
+  <dialog id="updates" class="update-sheet" aria-labelledby="update-title" aria-describedby="update-description"></dialog>
+  <noscript>开启 JavaScript 后即可浏览并操作 AIfrontier。</noscript>
+</body>
+</html>

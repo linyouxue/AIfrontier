@@ -11,7 +11,7 @@
   {"name":"Eugene Yan","feed":"https://eugeneyan.com/rss/","kind":"author"},
   {"name":"Jay Alammar","feed":"https://jalammar.github.io/feed.xml","kind":"author"},
   {"name":"Nathan Lambert · Interconnects","feed":"https://www.interconnects.ai/feed","kind":"author"},
-  {"name":"Jack Clark · Import AI","feed":"https://importai.substack.com/feed","kind":"author"},
+  {"name":"Jack Clark · Import AI","feed":"https://jack-clark.net/feed/","kind":"author"},
   {"name":"Sebastian Ruder","feed":"https://www.ruder.io/rss/","kind":"author"},
   {"name":"通义千问 Qwen","feed":"https://qwenlm.github.io/blog/index.xml","kind":"team"},
   {"name":"OpenAI","feed":"https://openai.com/news/rss.xml","kind":"team","categories":["Research","Engineering","Safety","Publication","Research Publication"]},

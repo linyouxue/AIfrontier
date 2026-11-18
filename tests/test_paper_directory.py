@@ -7,10 +7,19 @@ import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from paper_topics import TAXONOMY, research_paths
+from build_preview import known_announcements
 from publish_papers import publish, ranked
 
 
 class PaperDirectoryTest(unittest.TestCase):
+    def test_reuses_verified_metadata_but_refetches_replacements_and_new_categories(self):
+        event = {"date":"2026-11-18", "category":"cs.RO", "type":"cross"}
+        paper = dict(categories=["cs.RO"], primaryCategory="cs.RO", updatedAt="2026-11-18",
+                     version="v1", announcements=[event])
+        self.assertTrue(known_announcements(paper, [event | {"type":"new-or-cross"}]))
+        self.assertFalse(known_announcements(paper, [event | {"type":"replace", "version":"v2"}]))
+        self.assertFalse(known_announcements(paper, [event | {"category":"cs.AI"}]))
+
     def test_batches_votes_missing_signal_ties_and_retention(self):
         rows = [{"id": k, "published": day} for k, day in [
             ("older", "2026-11-08"), ("unknown", "2026-11-18"), ("zero", "2026-11-12"),

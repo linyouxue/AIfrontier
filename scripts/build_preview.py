@@ -292,6 +292,10 @@ def build_preview(output, source, *, legacy_feed=False, highlights_url=HIGHLIGHT
         catalog = {"from": first_day, "through": last_day}
     metadata_ids = set(announced_ids) - new_papers.keys()
     if not legacy_feed:
+        # arXiv's recent list repeats previously verified announcements for several days.
+        # An unseen announcement (including a replacement) still needs fresh Atom metadata.
+        metadata_ids = {identifier for identifier in metadata_ids
+                        if not known_announcements(papers.get(identifier), announcements[identifier])}
         # The earlier cs.AI preview has no Atom classification fields.
         metadata_ids.update(
             identifier for identifier, paper in papers.items()
@@ -355,6 +359,19 @@ def build_preview(output, source, *, legacy_feed=False, highlights_url=HIGHLIGHT
     temporary_path.replace(data_path)
     print(f"arXiv {announcement_date}: {len(announced_ids)} announcement IDs, {len(retained_papers)} retained papers")
     print(f"Preview: {output.resolve()}")
+
+
+def known_announcements(paper, events):
+    if not paper or not all(paper.get(k) for k in ("version", "categories", "primaryCategory", "updatedAt")):
+        return False
+    old = {(e["date"], e["category"], e["type"]): e.get("version")
+           for e in paper.get("announcements", [])}
+    for e in events:
+        kinds = ("new", "cross", "new-or-cross") if e["type"] == "new-or-cross" else (e["type"],)
+        keys = [(e["date"], e["category"], kind) for kind in kinds]
+        if not any(key in old and (not e.get("version") or e["version"] == old[key]) for key in keys):
+            return False
+    return bool(events)
 
 
 def merge_announcements(previous, current, first_day):

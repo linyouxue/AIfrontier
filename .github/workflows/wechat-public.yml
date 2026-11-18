@@ -111,8 +111,16 @@ jobs:
               *) echo "::error::Cannot restore $name (HTTP $status)"; exit 1 ;;
             esac
           done
+          if [[ ! -s dist/wechat-preview/paper-work/archive.json.gz ]]; then
+            echo "Restoring the verified arXiv baseline for the first publication"
+            curl --fail --location --silent --show-error --retry 2 --max-time 180 \
+              https://github.com/linyouxue/AIfrontier/releases/download/arxiv-baseline-20261118/archive.json.gz \
+              -o dist/wechat-preview/paper-work/archive.json.gz
+          fi
       - name: Collect arXiv announcements, refresh community votes and build the paper directory
         id: papers
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python3 -u scripts/publish_papers.py
       - name: Report source coverage
         id: report

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="查看 AIfrontier 从公开微信订阅收录的文章，点开阅读原文。">
+  <title>微信公众号文章 · AIfrontier</title>
+  <style>
+    :root{color-scheme:light dark;--paper:#f8f7f3;--card:#fffefa;--ink:#242721;--muted:#545b51;--line:#dedfd6;--accent:#386047}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font:1rem/1.6 system-ui,"Microsoft YaHei",sans-serif}
+    main{max-width:52rem;margin:auto;padding:clamp(1rem,5vw,3rem) clamp(1rem,5vw,2rem) 3rem}
+    header{margin-bottom:1.6rem}
+    .brand{margin:0;color:var(--accent);font-weight:700}
+    h1{margin:.25rem 0 .5rem;font-size:clamp(1.85rem,6vw,2.75rem);line-height:1.25}
+    .meta,.status{color:var(--muted);font-size:.87rem}
+    .status{margin:0}
+    details{margin-top:.8rem}
+    summary{width:fit-content;cursor:pointer;color:var(--accent)}
+    details ul{max-width:26rem;padding:0;list-style:none}
+    details li{display:flex;justify-content:space-between;gap:1rem;padding:.25rem 0;color:var(--muted)}
+    .card{margin:.75rem 0;border:1px solid var(--line);border-radius:.65rem;background:var(--card)}
+    .card a{display:block;padding:1rem 1.15rem;color:inherit;text-decoration:none;border-radius:inherit}
+    .card a:hover h2,.card a:focus-visible h2{text-decoration:underline;text-underline-offset:.2em}
+    a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+    .meta time{margin-inline-start:.8rem}
+    h2{margin:.25rem 0 .35rem;font-size:1.13rem;line-height:1.45;overflow-wrap:anywhere}
+    .card p{margin:0;color:var(--muted);overflow-wrap:anywhere}
+    @media(prefers-color-scheme:dark){
+      :root{--paper:#20231f;--card:#272c26;--ink:#edeee8;--muted:#b6c3b4;--line:#3c483d;--accent:#a3cbb1}
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="brand">AIfrontier</p>
+      <h1>微信公众号文章</h1>
+      <p class="status">$source_count 个公开订阅 · $article_count 篇 · 最近检查 $checked（北京时间）</p>
+      <details>
+        <summary>订阅状态</summary>
+        <ul>$statuses</ul>
+      </details>
+    </header>
+    <section aria-label="已收录文章">
+      $articles
+    </section>
+  </main>
+</body>
+</html>

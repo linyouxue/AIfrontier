@@ -21,9 +21,44 @@ NOTE = re.compile(r"/(?:explore|discovery/item)/([0-9a-f]{24})/?")
 TECHNICAL = re.compile(r"\b(?:benchmarks?|latency|throughput|quantization|neural|training|tokenizers?|decoding)\b|量化|神经网络|吞吐|评测", re.I)
 
 
+def x_item(handle, url, body, stamp, minimum):
+    text = " ".join(re.sub(r"https?://\S+", "", body).split())
+    if len(text) < minimum or text.startswith(("RT @", "@")) or not (AI_TOPIC.search(text) or TECHNICAL.search(text)):
+        return None
+    return {"id": "x:" + url.rsplit("/", 1)[1], "original": url, "source": "@" + handle,
+            "published": stamp.astimezone(SHANGHAI).date().isoformat(),
+            "title": text.split(". ", 1)[0][:110], "summary": text[:200]}
+
+
+def x_feed(handle):
+    channel = ET.fromstring(read(f"https://fxtwitter.com/{handle.lower()}/feed.xml?with_replies=0")).find("channel")
+    if channel is None or urlsplit(channel.findtext("link", "")).path.strip("/").lower() != handle.lower():
+        raise ValueError("Mismatched X feed")
+    for entry in channel.findall("item"):
+        url = entry.findtext("link", "")
+        if not re.fullmatch(rf"https://x\.com/{re.escape(handle)}/status/[0-9]{{1,20}}", url, re.I):
+            continue
+        if entry.findtext("guid") != url:
+            continue
+        # FxEmbed places the author's text first and adds quoted posts and media afterwards.
+        paragraph = re.match(r"\s*<p>(.*?)</p>", entry.findtext("description", ""), re.S)
+        if paragraph:
+            stamp = parsedate_to_datetime(entry.findtext("pubDate", ""))
+            if stamp.tzinfo is None:
+                raise ValueError("Missing X publication timezone")
+            if item := x_item(handle, url, clean(paragraph[1]), stamp, 180):
+                yield item
+
+
 def x_posts(handle):
-    body = read(f"https://api.fxtwitter.com/2/profile/{handle}/statuses?count=50")
-    page = json.loads(body)
+    try:
+        body = read(f"https://api.fxtwitter.com/2/profile/{handle.lower()}/statuses?count=50")
+        page = json.loads(body)
+    except HTTPError as error:
+        if error.code != 404:
+            raise
+        yield from x_feed(handle)
+        return
     if page.get("code") != 200 or not isinstance(page.get("results"), list):
         raise ValueError("Invalid FxEmbed timeline")
     for post in page["results"]:
@@ -35,16 +70,12 @@ def x_posts(handle):
         url = f"https://x.com/{handle}/status/{identifier}"
         if not re.fullmatch(r"[0-9]{1,20}", identifier) or post["url"].lower() != url.lower():
             raise ValueError("Mismatched X original")
-        text = " ".join(re.sub(r"https?://\S+", "", post.get("text", "")).split())
-        if not (AI_TOPIC.search(text) or TECHNICAL.search(text)) or text.startswith("RT @"):
-            continue
         has_link = any(f.get("type") == "url" and f.get("replacement")
                        for f in (post.get("raw_text") or {}).get("facets", []))
-        if len(text) < (180 if post.get("quote") else 45 if has_link else 150):
-            continue
-        stamp = datetime.fromtimestamp(post["created_timestamp"], timezone.utc).astimezone(SHANGHAI)
-        yield {"id": "x:" + identifier, "original": url, "source": "@" + handle,
-               "published": stamp.date().isoformat(), "title": text.split(". ", 1)[0][:110], "summary": text[:900]}
+        minimum = 180 if post.get("quote") else 45 if has_link else 150
+        stamp = datetime.fromtimestamp(post["created_timestamp"], timezone.utc)
+        if item := x_item(handle, url, post.get("text", ""), stamp, minimum):
+            yield item
 
 
 def xhs_posts(base, account):
@@ -136,6 +167,9 @@ if __name__ == "__main__":
     OUTPUT.mkdir(parents=True, exist_ok=True)
     destination = OUTPUT / "social.json"
     previous = json.loads(destination.read_text("utf-8")) if destination.exists() else {}
+    # A first cloud run can miss accounts that were already verified during enrollment.
+    baseline = json.loads(REGISTRY.with_name("x-baseline.json").read_text("utf-8"))
+    previous["items"] = baseline + previous.get("items", [])
     snapshot = collect(json.loads(REGISTRY.read_text("utf-8")), previous, os.getenv("AIFRONTIER_RSSHUB_URL"))
     temp = destination.with_suffix(".tmp")
     temp.write_text(json.dumps(snapshot, ensure_ascii=False), encoding="utf-8")

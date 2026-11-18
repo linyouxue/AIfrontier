@@ -5,12 +5,25 @@ from pathlib import Path
 import sys
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from collect_social import collect, x_posts
 
 
 class AccountUpdates(unittest.TestCase):
+    def test_x_feed_fallback_excludes_reposts_and_quoted_body(self):
+        now = format_datetime(datetime.now(timezone.utc))
+        text = "We measured GPU inference latency across model sizes and shared the benchmark results. " * 3
+        def item(owner, identifier, first):
+            url = f"https://x.com/{owner}/status/{identifier}"
+            return (f"<item><link>{url}</link><guid>{url}</guid><pubDate>{now}</pubDate>"
+                    f"<description><![CDATA[<p>{first}</p><blockquote>{text}</blockquote>]]></description></item>")
+        rss = ('<rss><channel><link>https://fxtwitter.com/lab</link>' + item("lab", 1, text)
+               + item("other", 2, text) + item("lab", 3, "Sharing") + "</channel></rss>")
+        with patch("collect_social.read", side_effect=[HTTPError("test", 404, "", {}, None), rss]):
+            self.assertEqual([row["id"] for row in x_posts("Lab")], ["x:1"])
+
     def test_fxembed_keeps_owned_originals_and_dates(self):
         now = datetime.now(timezone.utc)
         row = {"type": "status", "id": "123", "author": {"screen_name": "Lab"},

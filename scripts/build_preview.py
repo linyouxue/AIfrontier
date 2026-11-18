@@ -18,6 +18,7 @@ from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
 
 from arxiv_lists import CORE, ID, LIST_URL, SUPPLEMENTARY, read_announcements
+from arxiv_harvest import BASE as OAI_URL, harvest
 from paper_highlights import HIGHLIGHTS_URL, generate_highlights
 from paper_topics import TAXONOMY, research_paths
 
@@ -40,11 +41,12 @@ class ArxivSource:
         self.metadata_url = metadata_url
         self.listing_url = listing_url
         self.next_request = 0
+        self.harvest_since = None
 
     def read(self, url):
         # Use one request at a time and respect the separate HTML list crawl delay.
         official_list = url.startswith(LIST_URL + "/")
-        official = official_list or url == RSS_URL or url.startswith(METADATA_URL + "?")
+        official = official_list or url == RSS_URL or url.startswith((METADATA_URL + "?", OAI_URL + "?"))
         delay = 15 if official_list else 3
         request = Request(url, headers={
             "User-Agent": "AIfrontier/0.1 (+https://github.com/linyouxue/AIfrontier)",
@@ -94,6 +96,7 @@ class ArxivSource:
             verified = sum(count for batch in counted.values() for kind, count in batch.items() if kind != "replace")
             edge = max(counted, default=current_date)
             print(f"{category}: {verified} new/cross list entries across {len(counted)} dated batches through {edge}", flush=True)
+        self.harvest_since = (datetime.fromisoformat(min(dates)).date() - timedelta(days=1)).isoformat()
         return max(dates), announcements, batches, verified_ranges
 
     def read_legacy_feed(self):
@@ -111,6 +114,8 @@ class ArxivSource:
         return announcement_date.isoformat(), sorted(announced_ids)
 
     def read_papers(self, ids):
+        if ids and self.harvest_since and self.metadata_url == METADATA_URL:
+            return harvest(self.read_xml, ids, self.harvest_since)
         papers = {}
         for start in range(0, len(ids), METADATA_BATCH_SIZE):
             requested_ids = ids[start:start + METADATA_BATCH_SIZE]
@@ -292,6 +297,9 @@ def build_preview(output, source, *, legacy_feed=False, highlights_url=HIGHLIGHT
         catalog = {"from": first_day, "through": last_day}
     metadata_ids = set(announced_ids) - new_papers.keys()
     if not legacy_feed:
+        # Modern arXiv identifiers encode the first submission month in YYMM.
+        first_month = first_day[2:4] + first_day[5:7]
+        metadata_ids = {i for i in metadata_ids if i[:4].isdigit() and i[:4] >= first_month}
         # arXiv's recent list repeats previously verified announcements for several days.
         # An unseen announcement (including a replacement) still needs fresh Atom metadata.
         metadata_ids = {identifier for identifier in metadata_ids

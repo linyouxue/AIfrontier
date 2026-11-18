@@ -5,7 +5,7 @@ from html import escape
 import json
 from string import Template
 
-from collect_public_wechat import ROOT, SHANGHAI, SOURCES, article_link
+from collect_public_wechat import ROOT, SHANGHAI, article_link
 
 
 def article_card(article):
@@ -36,7 +36,7 @@ def render(snapshot):
         for source in sources
     ]
     return Template((ROOT / "site" / "wechat-preview.html").read_text(encoding="utf-8")).substitute(
-        source_count=len(SOURCES),
+        source_count=len({s["account"] for s in sources}),
         article_count=len(articles),
         checked=checked.strftime("%Y-%m-%d %H:%M"),
         statuses="\n".join(status_rows),
@@ -50,3 +50,7 @@ if __name__ == "__main__":
     page = output / "site" / "index.html"
     page.parent.mkdir(parents=True, exist_ok=True)
     page.write_text(render(snapshot), encoding="utf-8")
+    # The published snapshot restores verified items if the Actions cache expires.
+    public_sources = [{k: v for k, v in source.items() if k not in {"reviewId", "articleId"}} for source in snapshot["sources"]]
+    page.with_name("wechat.json").write_text(json.dumps({"items": snapshot["items"], "sources": public_sources},
+                                                        ensure_ascii=False), encoding="utf-8")

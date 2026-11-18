@@ -1,6 +1,7 @@
-"""Collect and verify the eight public AIfrontier WeChat feeds."""
+"""Collect and verify AIfrontier WeChat articles from RSS and WeRead."""
 
 import argparse
+from base64 import b64encode
 from calendar import monthrange
 from collections import Counter
 from datetime import datetime, timezone
@@ -9,6 +10,7 @@ from html import unescape
 from html.parser import HTMLParser
 from http.client import HTTPException
 import json
+import os
 from pathlib import Path
 import re
 from tempfile import NamedTemporaryFile
@@ -187,7 +189,7 @@ def verify(link, candidate_title, candidate_time, account):
     return parse_original(raw, requested, verified, candidate_title, candidate_time, account)
 
 
-def parse_original(raw, requested, verified, candidate_title, candidate_time, account):
+def parse_original(raw, requested, verified, candidate_title, candidate_time, account, publisher_id=None):
     document = raw.decode("utf-8")
     page = OriginalPage(document)
     title = page.text("activity-name") or page.text("js_text_title") or clean(page.meta.get("og:title", ""))
@@ -212,6 +214,11 @@ def parse_original(raw, requested, verified, candidate_title, candidate_time, ac
     if len(long_ids) > 1:
         raise ValueError("original article identity mismatch")
     link = requested[1]
+    if publisher_id is not None:
+        canonical = article_link(page.meta.get("og:url", ""))
+        if not canonical or parse_qs(urlsplit(canonical[1]).query).get("__biz") != [publisher_id]:
+            raise ValueError("reader publisher identity mismatch")
+        link = canonical[1]
     if not technical_article(title, body):
         return None, aliases
     return {
@@ -269,7 +276,86 @@ def feed_article(row, account, published, *, public_biz, deferred=""):
             "publishedAt": published.astimezone(timezone.utc).isoformat()}, {original[0]}
 
 
-def collect(output):
+class NoReaderRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+class ReaderSessionError(ValueError):
+    pass
+
+
+def reader_request(opener, cookie, resource, params):
+    url = "https://weread.qq.com" + resource + "?" + urlencode(params)
+    request = Request(url, headers={"Cookie": cookie, "Accept": "application/json" if resource == "/api/mp/cover" else "text/html",
+                                    "User-Agent": "AIfrontier/0.1 (+https://github.com/linyouxue/AIfrontier)"})
+    with opener.open(request, timeout=20) as response:
+        return response.read()
+
+
+def reader_candidate(book, account, previous, items, cookie, opener, first, last, source):
+    cover = json.loads(reader_request(opener, cookie, "/api/mp/cover", {"bookId": book}))
+    if not isinstance(cover, dict):
+        raise ValueError("invalid reader response")
+    code = cover.get("errCode") or cover.get("errcode")
+    if code and str(code) != "0":
+        if str(code) in {"-2012", "-2010"}:
+            raise ReaderSessionError("reader authorization required")
+        raise ValueError("reader cover unavailable")
+    review = cover.get("reviewId", "")
+    title = clean(cover.get("title") or "")
+    if not isinstance(review, str) or not re.fullmatch(re.escape(book) + r"_[A-Za-z0-9_~-]+", review) or not title:
+        raise ValueError("missing reader cover")
+    source["discovered"] = 1
+    saved_id = previous.get("articleId")
+    if (previous.get("reviewId") == review and saved_id in items and comparable(items[saved_id]["title"]) == comparable(title)
+            and items[saved_id]["source"] == account):
+        source.update(matched=1, articleId=saved_id, reviewId=review)
+        return
+    article_page = reader_request(opener, cookie, "/web/mp/content", {"reviewId": review})
+    short = article_link(WECHAT + "/s/" + review[len(book) + 1:])
+    publisher_id = b64encode(book.removeprefix("MP_WXS_").encode("ascii")).decode("ascii")
+    article, _ = parse_original(article_page, short, short, title, None, account, publisher_id)
+    if article is None or not first <= article["published"] <= last:
+        source["filtered"] = 1
+        return
+    key = article["id"]
+    if key in items:
+        source["matched"] = 1
+    else:
+        items[key] = article | {"collected": source["checkedAt"]}
+        source["inserted"] = 1
+    source.update(articleId=key, reviewId=review)
+
+
+def collect_reader(accounts, cookie, items, prior_sources, checked, first, last):
+    opener = urllib.request.build_opener(NoReaderRedirect())
+    blocked = "" if cookie else "reader authorization missing"
+    for account, book in accounts.items():
+        if not re.fullmatch(r"MP_WXS_\d+", book):
+            raise ValueError("invalid publisher in account catalog")
+        key = "weread:" + book
+        previous = prior_sources.get(key, {})
+        source = {"id": key, "account": account, "platform": "weread", "status": "ok", "checkedAt": checked,
+                  "discovered": 0, "inserted": 0, "matched": 0, "filtered": 0, "unverified": 0}
+        if previous.get("lastSuccessAt"):
+            source["lastSuccessAt"] = previous["lastSuccessAt"]
+        try:
+            if blocked:
+                raise ReaderSessionError(blocked)
+            reader_candidate(book, account, previous, items, cookie, opener, first, last, source)
+        except (OSError, HTTPException, ValueError) as error:
+            label = error_label(error)
+            if isinstance(error, ReaderSessionError) or isinstance(error, HTTPError) and error.code in {401, 403, 429}:
+                blocked = label
+            source.update(status="partial" if source["discovered"] else "failed", error=label, unverified=source["discovered"])
+        else:
+            source["lastSuccessAt"] = checked
+        print(json.dumps({k: v for k, v in source.items() if k not in {"reviewId", "articleId"}}, ensure_ascii=True))
+        yield source
+
+
+def collect(output, reader_cookie=None):
     now = datetime.now(timezone.utc)
     checked = now.isoformat()
     first_day, today = publication_window(now.astimezone(SHANGHAI).date())
@@ -350,6 +436,9 @@ def collect(output):
         sources.append(source)
         print(json.dumps(source, ensure_ascii=True))
 
+    if reader_cookie is not None:
+        accounts = json.loads((ROOT / "config" / "wechat-accounts.json").read_text("utf-8"))
+        sources.extend(collect_reader(accounts, reader_cookie, items, prior_sources, checked, first_day, today))
     published_items = sorted(items.values(), key=lambda item: (item["published"], item["id"]), reverse=True)
     output.mkdir(parents=True, exist_ok=True)
     with NamedTemporaryFile(mode="w", encoding="utf-8", dir=output, delete=False) as file:
@@ -370,7 +459,9 @@ def error_label(error):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "dist" / "wechat-preview")
-    collect(parser.parse_args().output)
+    parser.add_argument("--with-reader", action="store_true", help="Include the cloud WeRead account catalog")
+    args = parser.parse_args()
+    collect(args.output, os.environ.pop("AIFRONTIER_WEREAD_COOKIE", "") if args.with_reader else None)
 
 
 if __name__ == "__main__":

@@ -14,10 +14,14 @@ concurrency:
 
 jobs:
   collect:
+    if: github.ref == 'refs/heads/main'
+    environment: wechat-collection
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
       SNAPSHOT_KEY: public-wechat-v1-${{ github.run_id }}-${{ github.run_attempt }}
+    outputs:
+      reader_ok: ${{ steps.report.outputs.reader_ok }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -27,10 +31,45 @@ jobs:
           path: dist/wechat-preview/wechat.json
           key: ${{ env.SNAPSHOT_KEY }}
           restore-keys: public-wechat-v1-
-      - name: Collect and render public WeChat articles
+      - name: Restore the published articles on a cold cache
+        shell: bash
         run: |
-          python3 scripts/collect_public_wechat.py
+          file=dist/wechat-preview/wechat.json
+          if [[ ! -s "$file" ]]; then
+            mkdir -p "$(dirname "$file")"
+            status=$(curl --silent --show-error --location --output "$RUNNER_TEMP/previous.json" --write-out '%{http_code}' https://linyouxue.github.io/AIfrontier/wechat.json)
+            case "$status" in
+              200) jq -e '(.items | type == "array") and (.sources | type == "array")' "$RUNNER_TEMP/previous.json" >/dev/null
+                   cp "$RUNNER_TEMP/previous.json" "$file" ;;
+              404) echo "No previous public snapshot" ;;
+              *) echo "::error::Unable to restore published articles (HTTP $status)"; exit 1 ;;
+            esac
+          fi
+      - name: Collect and render public WeChat articles
+        env:
+          AIFRONTIER_WEREAD_COOKIE: ${{ secrets.AIFRONTIER_WEREAD_COOKIE }}
+        run: |
+          python3 scripts/collect_public_wechat.py --with-reader
           python3 scripts/render_wechat_preview.py
+      - name: Report source coverage
+        id: report
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          data = json.loads(Path('dist/wechat-preview/wechat.json').read_text())
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              print(f"共保留 {len(data['items'])} 篇文章", file=summary)
+              print("\n| 渠道 | 账号 | 成功检查 | 待核验或失败 | 候选 | 新增 | 已收录 | 筛除 |", file=summary)
+              print("|---|---:|---:|---:|---:|---:|---:|---:|", file=summary)
+              for platform in ('rss', 'weread'):
+                  rows = [s for s in data['sources'] if s['platform'] == platform]
+                  ok = sum(s['status'] == 'ok' for s in rows)
+                  counts = [sum(s[k] for s in rows) for k in ('discovered', 'inserted', 'matched', 'filtered')]
+                  print('| ' + ' | '.join(map(str, (platform, len(rows), ok, len(rows)-ok, *counts))) + ' |', file=summary)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              print('reader_ok=' + str(any(s['platform']=='weread' and s['status']=='ok' for s in data['sources'])).lower(), file=out)
+          PY
       - uses: actions/cache/save@v6
         with:
           path: dist/wechat-preview/wechat.json
@@ -52,3 +91,8 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+      - name: Check WeRead availability
+        if: needs.collect.outputs.reader_ok != 'true'
+        run: |
+          echo "::error::No WeRead account could be verified. Check source status and the WeRead session. Retained articles and public RSS updates have been deployed."
+          exit 1

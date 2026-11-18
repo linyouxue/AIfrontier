@@ -8,19 +8,28 @@ from string import Template
 from collect_public_wechat import ROOT, SHANGHAI, article_link
 
 
-def article_card(article):
-    original = article_link(article["original"])
-    if original is None:
-        raise ValueError("The snapshot contains a non-WeChat article link")
+def linked_card(article, href):
     author = escape(article["source"])
     title = escape(article["title"])
     summary = escape(article["summary"][:140])
     day = escape(article["published"])
     return (
-        f'<article class="card"><a href="{escape(original[1])}">'
+        f'<article class="card"><a href="{escape(href)}">'
         f'<div class="meta">{author}<time datetime="{day}">{day}</time></div>'
         f'<h2>{title}</h2><p>{summary}</p></a></article>'
     )
+
+
+def article_card(article):
+    original = article_link(article["original"])
+    if original is None:
+        raise ValueError("The snapshot contains a non-WeChat article link")
+    return linked_card(article, original[1])
+
+
+def listing(**values):
+    template = Template((ROOT / "site" / "wechat-preview.html").read_text(encoding="utf-8"))
+    return template.substitute(**values)
 
 
 def render(snapshot):
@@ -35,9 +44,11 @@ def render(snapshot):
         f'<li>{escape(source["account"])}<span>{labels[source["status"]]}</span></li>'
         for source in sources
     ]
-    return Template((ROOT / "site" / "wechat-preview.html").read_text(encoding="utf-8")).substitute(
-        source_count=len({s["account"] for s in sources}),
-        article_count=len(articles),
+    return listing(
+        title="微信公众号文章", description="查看 AIfrontier 收录的微信公众号文章，点开阅读原文。",
+        coverage=f"{len({s['account'] for s in sources})} 个公众号 · {len(articles)} 篇",
+        navigation='<a href="./" aria-current="page">微信公众号</a><a href="blogs/">技术博客</a>',
+        filters="",
         checked=checked.strftime("%Y-%m-%d %H:%M"),
         statuses="\n".join(status_rows),
         articles="\n".join(article_card(article) for article in articles) or "<p>本次暂无符合收录条件的文章。</p>",

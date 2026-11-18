@@ -1,4 +1,4 @@
-name: Refresh public WeChat feeds
+name: Refresh WeChat and technical blogs
 
 on:
   workflow_dispatch:
@@ -17,11 +17,12 @@ jobs:
     if: github.ref == 'refs/heads/main'
     environment: wechat-collection
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       SNAPSHOT_KEY: public-wechat-v1-${{ github.run_id }}-${{ github.run_attempt }}
     outputs:
       reader_ok: ${{ steps.report.outputs.reader_ok }}
+      blogs_ok: ${{ steps.blogs.outputs.blogs_ok }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -31,26 +32,51 @@ jobs:
           path: dist/wechat-preview/wechat.json
           key: ${{ env.SNAPSHOT_KEY }}
           restore-keys: public-wechat-v1-
-      - name: Restore the published articles on a cold cache
+      - name: Restore published archives
         shell: bash
         run: |
-          file=dist/wechat-preview/wechat.json
-          if [[ ! -s "$file" ]]; then
-            mkdir -p "$(dirname "$file")"
-            status=$(curl --silent --show-error --location --output "$RUNNER_TEMP/previous.json" --write-out '%{http_code}' https://linyouxue.github.io/AIfrontier/wechat.json)
+          mkdir -p dist/wechat-preview
+          for name in wechat blogs; do
+            file="dist/wechat-preview/$name.json"
+            if [[ -s "$file" ]]; then continue; fi
+            status=$(curl --silent --show-error --location --retry 2 --max-time 45 --output "$RUNNER_TEMP/previous.json" --write-out '%{http_code}' "https://linyouxue.github.io/AIfrontier/$name.json?run=$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT")
             case "$status" in
               200) jq -e '(.items | type == "array") and (.sources | type == "array")' "$RUNNER_TEMP/previous.json" >/dev/null
                    cp "$RUNNER_TEMP/previous.json" "$file" ;;
-              404) echo "No previous public snapshot" ;;
-              *) echo "::error::Unable to restore published articles (HTTP $status)"; exit 1 ;;
+              404) echo "No previous public $name archive" ;;
+              *) echo "::error::Unable to restore $name (HTTP $status)"; exit 1 ;;
             esac
-          fi
+          done
       - name: Collect and render public WeChat articles
         env:
           AIFRONTIER_WEREAD_COOKIE: ${{ secrets.AIFRONTIER_WEREAD_COOKIE }}
         run: |
           python3 scripts/collect_public_wechat.py --with-reader
           python3 scripts/render_wechat_preview.py
+      - name: Collect and publish technical blogs
+        id: blogs
+        run: |
+          python3 scripts/collect_blogs.py
+          python3 scripts/render_blogs.py
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          data = json.loads(Path('dist/wechat-preview/blogs.json').read_text())
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              print("### 技术博客\n\n| 来源 | 检查成功 | 本轮新增 | 近三个月收录 |", file=summary)
+              print("|---|---:|---:|---:|", file=summary)
+              for kind, label in [('author', '个人'), ('team', '团队')]:
+                  rows = [s for s in data['sources'] if s['kind'] == kind]
+                  print(f"| {label} | {sum(s['status']=='ok' for s in rows)}/{len(rows)} | "
+                        f"{sum(s['inserted'] for s in rows)} | {sum(i['kind']==kind for i in data['items'])} |", file=summary)
+              for row in data['sources']:
+                  if row['status'] != 'ok':
+                      message = f"{row['id']} · {row['error']}"
+                      print(f"::warning::{message}")
+                      print(f"\n读取失败 · {message}", file=summary)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              print('blogs_ok=' + str(any(s['status']=='ok' for s in data['sources'])).lower(), file=out)
+          PY
       - name: Report source coverage
         id: report
         run: |
@@ -95,4 +121,9 @@ jobs:
         if: needs.collect.outputs.reader_ok != 'true'
         run: |
           echo "::error::No WeRead account could be verified. Check source status and the WeRead session. Retained articles and public RSS updates have been deployed."
+          exit 1
+      - name: Check blog availability
+        if: always() && needs.collect.outputs.blogs_ok == 'false'
+        run: |
+          echo "::error::All blog sources failed. See the collection summary."
           exit 1

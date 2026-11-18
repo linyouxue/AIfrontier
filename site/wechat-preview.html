@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="查看 AIfrontier 从公开微信订阅收录的文章，点开阅读原文。">
-  <title>微信公众号文章 · AIfrontier</title>
+  <meta name="description" content="$description">
+  <title>$title · AIfrontier</title>
   <style>
     :root{color-scheme:light dark;--paper:#f8f7f3;--card:#fffefa;--ink:#242721;--muted:#545b51;--line:#dedfd6;--accent:#386047}
     *{box-sizing:border-box}
@@ -12,6 +12,10 @@
     main{max-width:52rem;margin:auto;padding:clamp(1rem,5vw,3rem) clamp(1rem,5vw,2rem) 3rem}
     header{margin-bottom:1.6rem}
     .brand{margin:0;color:var(--accent);font-weight:700}
+    nav{display:flex;align-items:baseline;flex-wrap:wrap;column-gap:1.15rem}
+    nav a{color:var(--accent);text-underline-offset:.22em}
+    nav [aria-current="page"]{font-weight:700;text-decoration:none;color:var(--ink)}
+    nav.filters{margin:.9rem 0}
     h1{margin:.25rem 0 .5rem;font-size:clamp(1.85rem,6vw,2.75rem);line-height:1.25}
     .meta,.status{color:var(--muted);font-size:.87rem}
     .status{margin:0}
@@ -34,9 +38,10 @@
 <body>
   <main>
     <header>
-      <p class="brand">AIfrontier</p>
-      <h1>微信公众号文章</h1>
-      <p class="status">$source_count 个公众号 · $article_count 篇 · 最近检查 $checked（北京时间）</p>
+      <nav aria-label="栏目"><span class="brand">AIfrontier</span>$navigation</nav>
+      <h1>$title</h1>
+      <p class="status">$coverage · 最近检查 $checked（北京时间）</p>
+      $filters
       <details>
         <summary>订阅状态</summary>
         <ul>$statuses</ul>

@@ -117,6 +117,7 @@ jobs:
         env:
           AIFRONTIER_ACCOUNT_FEEDS: ${{ secrets.AIFRONTIER_ACCOUNT_FEEDS }}
           BILIBILI_FEED_URL: ${{ secrets.BILIBILI_FEED_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python3 -u scripts/collect_events.py --output dist/wechat-preview
       - name: Collect complete video podcast episodes
@@ -162,6 +163,7 @@ jobs:
       - name: Collect arXiv announcements, refresh community votes and build the paper directory
         id: papers
         env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           FORCE_ARXIV: ${{ inputs.force_arxiv }}
         run: python3 -u scripts/publish_papers.py

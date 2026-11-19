@@ -38,14 +38,17 @@ class PaperDirectoryTest(unittest.TestCase):
         with TemporaryDirectory() as tmp:
             site = Path(tmp)
             output = site / "papers"
-            for name in ("wechat", "blogs", "social"):
-                (site / (name+".json")).write_text(json.dumps({"items":[], "sources":[{"checkedAt":checked,"status":"ok"}]}))
+            for name in ("wechat", "blogs", "social", "events", "podcasts"):
+                (site / (name+".json")).write_text(json.dumps({"items":[], "sources":[{"checkedAt":checked,"status":"ok","inserted":0}]}))
             publish(site, output, state, {"checkedAt":checked, "votes":{row["id"]:5}},
                     datetime(2026,11,18,2,tzinfo=timezone.utc))
             index = json.loads((output / "index-data.json").read_bytes())
             self.assertEqual(len(index["rows"]), 1)
             self.assertGreaterEqual(len(index["rows"][0][1]), 2)
             self.assertEqual(index["rows"][0][-1], 5)
+            checks = json.loads((site / "collection-status.json").read_bytes())["modules"]
+            for name in ("events", "podcasts"):
+                self.assertEqual(checks[name], {"checkedAt":checked,"status":"ok","inserted":0})
             self.assertIn("theme-switch", (site / "index.html").read_text("utf-8"))
             self.assertIn("#/arxiv", (output / "index.html").read_text("utf-8"))
             self.assertIn("cache", (site / "paper-abstracts" / "0000.json").read_text("utf-8"))

@@ -18,7 +18,7 @@ from event_sources import (
     EvidenceCandidate, anthropic_news, anthropic_notes, canonical_url, deepseek_updates, news_digest,
     openai_news, public_event_urls, public_host, publication_date,
 )
-from paper_highlights import HIGHLIGHTS_URL, request_points
+from paper_highlights import HIGHLIGHTS_URL, OPENAI_URL, OPENAI_MODEL, highlight_connection, request_points
 from social_event_sources import profile_url, social_sources
 from x_event_sources import x_candidates
 from public_video_search import bilibili_results, youtube_results
@@ -172,6 +172,8 @@ def add_chinese_points(items, url, key):
                    "rssSummary": item.get("digestSummary", "")[:800]}
         try:
             item["points"] = request_points(EVENT_PROMPT, content, url, key)
+            if url == OPENAI_URL:
+                item["pointsModel"] = OPENAI_MODEL
         except HTTPError as error:
             print(f"AI event Chinese points: HTTP {error.code}")
             if error.code in {401, 402, 403, 429}:
@@ -280,7 +282,7 @@ def main():
     parser.add_argument("--anthropic-notes-url", default=CLAUDE_RELEASE_NOTES + ".md")
     parser.add_argument("--deepseek-updates-url", default=DEEPSEEK_UPDATES)
     parser.add_argument("--digest-rss-url", default=DIGEST_RSS)
-    parser.add_argument("--highlights-url", default=HIGHLIGHTS_URL)
+    parser.add_argument("--highlights-url")
     parser.add_argument("--no-highlights", action="store_true")
     args = parser.parse_args()
     sources = [EventSource("openai-news", "official", lambda: openai_news(args.openai_rss_url)),
@@ -330,11 +332,11 @@ def main():
         active = {source.id for source in [*sources, *extra]}
     else:
         active = None
+    url, key = highlight_connection(args.highlights_url)
     collect_events(args.output, [source for source in sources if not args.source or source.id in args.source],
                    extra_sources=[source for source in extra if not args.source or source.id in args.source or source.platform in args.source],
                    active_ids=active,
-                   highlights_url=args.highlights_url,
-                   highlights_key=None if args.no_highlights else os.environ.get("OPENROUTER_API_KEY"))
+                   highlights_url=url, highlights_key=None if args.no_highlights else key)
 
 
 if __name__ == "__main__":

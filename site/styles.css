@@ -302,8 +302,14 @@ time { font-variant-numeric: tabular-nums; }
 .module-total { display: inline-block; margin-inline-start: 8px; font-size: .87rem; font-weight: 400; letter-spacing: normal; color: var(--muted); }
 .module-notice { margin-bottom: 13px; }
 .entries-block { min-width: 0; }
-.module-layout:not(:has(.direction-block)) .entries-block .source-cards { grid-template-columns: repeat(2,minmax(0,1fr)); align-items: start; }
-.module-page[data-channel="podcasts"] .module-layout .entries-block .source-cards { align-items: stretch; }
+.module-layout:not(:has(.direction-block)) .entries-block .source-cards { grid-template-columns: repeat(2,minmax(0,1fr)); }
+@media (min-width: 551px) {
+  .module-layout:not(:has(.direction-block)) .entries-block .source-record,
+  .module-layout:not(:has(.direction-block)) .entries-block .source-card,
+  .module-layout:not(:has(.direction-block)) .entries-block .source-copy { display: flex; flex-direction: column; }
+  .module-layout:not(:has(.direction-block)) .entries-block :is(.source-card, .source-copy) { flex: 1; }
+  .module-layout:not(:has(.direction-block)) .entries-block .source-meta { margin-top: auto; padding-top: 12px; }
+}
 .site-footer { margin-top: 40px; padding: 16px 0 25px; border-top: 1px solid var(--rule-soft); }
 .site-footer > a { color: var(--muted); font-size: 1.5rem; min-height: 44px; }
 .update-sheet { position: fixed; inset: auto 0 max(24px,env(safe-area-inset-bottom)); width: min(calc(100% - 32px), 550px); max-height: min(78dvh,550px); margin: 0 auto; padding: 12px 24px 23px; overflow-y: auto; overscroll-behavior: contain; border: 1px solid var(--rule); border-radius: 20px; color: var(--fg); background: var(--surface); box-shadow: 0 20px 65px #0e081c30; }

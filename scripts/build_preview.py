@@ -19,7 +19,7 @@ import xml.etree.ElementTree as ET
 
 from arxiv_lists import CORE, ID, LIST_URL, SUPPLEMENTARY, read_announcements
 from arxiv_harvest import BASE as OAI_URL, harvest
-from paper_highlights import HIGHLIGHTS_URL, generate_highlights
+from paper_highlights import generate_highlights, highlight_connection
 from paper_topics import TAXONOMY, research_paths
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -268,7 +268,7 @@ def active_announcement_gaps(gaps, today):
     return active
 
 
-def build_preview(output, source, *, legacy_feed=False, highlights_url=HIGHLIGHTS_URL, backfill=False):
+def build_preview(output, source, *, legacy_feed=False, highlights_url=None, backfill=False, with_highlights=True):
     now = datetime.now(timezone.utc)
     first_day, last_day = publication_window(now.astimezone(SHANGHAI).date())
 
@@ -347,8 +347,8 @@ def build_preview(output, source, *, legacy_feed=False, highlights_url=HIGHLIGHT
         papers[identifier] = paper
     retained_papers = [paper for paper in papers.values() if first_day <= paper["published"] <= last_day]
     retained_papers.sort(key=lambda paper: (paper["published"], paper["collected"], paper["id"]), reverse=True)
-    if not legacy_feed:
-        generate_highlights(retained_papers, highlights_url, os.environ.get("OPENROUTER_API_KEY"))
+    if not legacy_feed and with_highlights:
+        generate_highlights(retained_papers, *highlight_connection(highlights_url))
 
     output.mkdir(parents=True, exist_ok=True)
     payload = {"announcementDate": announcement_date, "checkedAt": collection_time, "papers": retained_papers}
@@ -438,7 +438,7 @@ def main():
     parser.add_argument("--rss-url", help="Use the original single-feed preview for a supplied cs.AI feed")
     parser.add_argument("--listing-url", default=LIST_URL)
     parser.add_argument("--metadata-url", default=METADATA_URL)
-    parser.add_argument("--highlights-url", default=HIGHLIGHTS_URL)
+    parser.add_argument("--highlights-url")
     parser.add_argument("--backfill", action="store_true", help="Fill the publication window from the official arXiv catalog")
     arguments = parser.parse_args()
     if arguments.backfill and arguments.rss_url:

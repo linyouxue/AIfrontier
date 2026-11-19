@@ -11,6 +11,7 @@ from arxiv_lists import CORE, SUPPLEMENTARY, LIST_URL
 from build_preview import (ArxivSource, METADATA_URL, ROOT, SHANGHAI, build_preview,
                            catalog_backfill_usable, publication_window)
 from paper_heat import FILENAME, refresh_heat
+from paper_highlights import generate_highlights, highlight_connection
 from publish_shell import publish_shell
 
 
@@ -98,7 +99,7 @@ def main():
     if (backfill or state.get("retryAnnouncements") or state["announcementDate"] < expected_announcement(now)
             or os.getenv("FORCE_ARXIV") == "true"):
         try:
-            build_preview(work, ArxivSource(None, METADATA_URL, LIST_URL), backfill=backfill)
+            build_preview(work, ArxivSource(None, METADATA_URL, LIST_URL), backfill=backfill, with_highlights=False)
         except (OSError, ValueError, SyntaxError) as error:
             if not state:
                 raise
@@ -109,6 +110,7 @@ def main():
     ok = refresh_heat(work)
     heat = json.loads((work / FILENAME).read_bytes()) if (work / FILENAME).exists() else {}
     state["retryAnnouncements"] = failed
+    generate_highlights(state["papers"], *highlight_connection())
     publish(work, output, state, heat, datetime.now(timezone.utc))
     if path := os.getenv("GITHUB_OUTPUT"):
         with open(path, "a") as file:

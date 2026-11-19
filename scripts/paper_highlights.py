@@ -1,12 +1,15 @@
 """Generate a bounded set of Chinese highlights from public arXiv abstracts."""
 
 import json
+import os
 import re
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 
 HIGHLIGHTS_URL = "https://openrouter.ai/api/v1/chat/completions"
+OPENAI_URL = "https://api.openai.com/v1/chat/completions"
+OPENAI_MODEL = "gpt-6-luna"
 MAX_FEATURED = 8
 NEW_RESEARCH = re.compile(
     r"\b(?:introduc\w*|propos\w*|present\w*|releas\w*)\b.{0,125}"
@@ -29,8 +32,15 @@ def featured_priority(paper):
     return int(NEW_RESEARCH.search(text) is not None)
 
 
+def highlight_connection(override=None):
+    official_key = os.environ.get("OPENAI_API_KEY")
+    if override == OPENAI_URL or (override is None and official_key):
+        return OPENAI_URL, official_key
+    return override or HIGHLIGHTS_URL, os.environ.get("OPENROUTER_API_KEY")
+
+
 def make_points(paper, url, key):
-    return request_points(PROMPT, {"title": paper["title"], "abstract": paper["summary"]}, url, key)
+    return request_points(PROMPT, {"title": paper["title"], "abstract": paper["summary"][:6000]}, url, key)
 
 
 def request_points(prompt, content, url, key):
@@ -40,9 +50,12 @@ def request_points(prompt, content, url, key):
         "response_format": {"type": "json_object"},
         "messages": [
             {"role": "system", "content": prompt},
-            {"role": "user", "content": json.dumps(content)},
+            {"role": "user", "content": json.dumps(content, ensure_ascii=False)},
         ],
     }
+    if url == OPENAI_URL:
+        del payload["max_tokens"]
+        payload.update(model=OPENAI_MODEL, reasoning_effort="none", max_completion_tokens=400, store=False)
     request = Request(url, data=json.dumps(payload).encode("utf-8"), headers={
         "Authorization": f"Bearer {key}",
         "Content-Type": "application/json",
@@ -62,7 +75,7 @@ def request_points(prompt, content, url, key):
 
 def generate_highlights(papers, url, key):
     if not key:
-        print("Chinese highlights: skipped (OPENROUTER_API_KEY unavailable)")
+        print("Chinese highlights: no summary provider configured")
         return
     ranked = []
     for paper in papers:
@@ -88,5 +101,7 @@ def generate_highlights(papers, url, key):
             print(f"Chinese highlights {paper['id']}: no valid completion")
         else:
             paper["highlights"] = {"version": paper["version"], "points": points}
+            if url == OPENAI_URL:
+                paper["highlights"]["model"] = OPENAI_MODEL
             generated += 1
     print(f"Chinese highlights: {generated} generated, {reused} reused, {failed} failed")

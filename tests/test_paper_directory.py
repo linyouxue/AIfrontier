@@ -1,4 +1,4 @@
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 import json
 from pathlib import Path
 import sys
@@ -20,13 +20,40 @@ class PaperDirectoryTest(unittest.TestCase):
         self.assertFalse(known_announcements(paper, [event | {"type":"replace", "version":"v2"}]))
         self.assertFalse(known_announcements(paper, [event | {"category":"cs.AI"}]))
 
-    def test_batches_votes_missing_signal_ties_and_retention(self):
+    def test_score_order_missing_signal_ties_and_retention(self):
         rows = [{"id": k, "published": day} for k, day in [
             ("older", "2026-11-08"), ("unknown", "2026-11-18"), ("zero", "2026-11-12"),
             ("hot", "2026-11-09"), ("recent", "2026-11-18"), ("expired", "2026-08-17")]]
         votes = {"older": 900, "hot": 7, "recent": 7, "zero": 0}
         order = ranked(rows, votes, date(2026, 11, 18))
-        self.assertEqual([p["id"] for p in order], ["recent", "hot", "zero", "unknown", "older"])
+        self.assertEqual([p["id"] for p in order], ["older", "recent", "hot", "zero", "unknown"])
+
+    def test_score_discovery_slots_and_recent_cap(self):
+        today = date(2026, 11, 19)
+        votes, rows = {}, []
+        def paper(key, age, count=None):
+            rows.append({"id": key, "published": (today - timedelta(days=age)).isoformat()})
+            if count is not None:
+                votes[key] = count
+        paper("65d", 65, 246)
+        paper("2d", 2, 151)
+        paper("29d", 29, 130)
+        self.assertEqual([p["id"] for p in ranked(rows, votes, today)], ["2d", "29d", "65d"])
+        for i in range(24):
+            paper(f"recent-{i}", 3, 500)
+            paper(f"mid-{i}", 21, 7)
+        for age in (4, 20, 70):
+            for i in range(3):
+                paper(f"discovery-{age}-{i}", age)
+        ordered = ranked(rows, votes, today)
+        self.assertEqual(ordered, ranked(rows[::-1], votes, today))
+        self.assertEqual(len(rows), len({p["id"] for p in ordered}))
+        self.assertEqual(sum(p["published"] > "2026-11-09" for p in ordered[:20]), 6)
+        self.assertTrue(ordered[7]["id"].startswith("discovery-20-"))
+        self.assertTrue(ordered[15]["id"].startswith("discovery-70-"))
+        self.assertNotEqual(ordered[7]["id"], ranked(rows, votes, today + timedelta(days=1))[7]["id"])
+        only_recent = [p for p in rows if p["id"].startswith("recent-")]
+        self.assertEqual(len(ranked(only_recent, votes, today)), len(only_recent))
 
     def test_cross_listed_paper_has_one_rank_and_full_abstract_is_searchable(self):
         row = dict(id="2611.12345", title="Efficient systems", source="arXiv · Author",
@@ -51,6 +78,7 @@ class PaperDirectoryTest(unittest.TestCase):
                 self.assertEqual(checks[name], {"checkedAt":checked,"status":"ok","inserted":0})
             self.assertIn("theme-switch", (site / "index.html").read_text("utf-8"))
             self.assertIn("#/arxiv", (output / "index.html").read_text("utf-8"))
+            self.assertTrue((site / "paper-ranking.js").is_file())
             self.assertIn("cache", (site / "paper-abstracts" / "0000.json").read_text("utf-8"))
             from search_index import shard_for, tokens
             term = tokens("cache")[0]

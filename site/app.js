@@ -1,5 +1,5 @@
 const modules = {
-  arxiv: { name: 'arXiv 论文', description: '按三级研究方向浏览。最近十天优先，每批按 Hugging Face 推荐票排序。', unit: '篇', file: 'papers-reader.json', entries: [] },
+  arxiv: { name: 'arXiv 论文', description: '按热度和新鲜度推荐未读论文。可按研究方向浏览，也可搜索已读论文。', unit: '篇', file: 'papers-reader.json', entries: [] },
   x: { name: 'X 与小红书', description: '关注账号发布的技术长帖与笔记。', unit: '条', file: 'x.json', entries: [] },
   wechat: { name: '微信公众号文章', description: '中文论文解读与工程实践。', unit: '篇', file: 'wechat.json', entries: [] },
   blogs: { name: '技术博客', description: '研究者和工程团队亲笔写下的方法、实验与实践。', unit: '篇', file: 'blogs.json', entries: [] },
@@ -44,6 +44,17 @@ function retained(entry, dateRange) {
 }
 
 const saveKey = 'aifrontier-reading';
+const readPaperPrefix = 'aifrontier-paper-read:';
+const readPapers = new Set();
+try {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key?.startsWith(readPaperPrefix)) readPapers.add(key.slice(readPaperPrefix.length));
+  }
+} catch { /* Reading state is still usable for the current visit. */ }
+function isReadPaper(entry) {
+  return readPapers.has(paperBaseId(entry.id));
+}
 function collectionOrder(value) {
   const parts = typeof value === 'string' && /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,9}))?(?:Z|\+00:00)$/.exec(value);
   return parts && Number.isFinite(Date.parse(value)) ? parts[1] + '.' + (parts[2] ?? '').padEnd(9, '0') : '';
@@ -126,6 +137,16 @@ function currentVotes() {
   return Number.isFinite(elapsed) && elapsed >= 0 && elapsed <= 48 * 3_600_000 ? paperHeat?.votes : null;
 }
 
+function recommendedPapers(scope, today) {
+  const votes = currentVotes();
+  const entries = scope.map(item => item.entry).filter(entry => !isReadPaper(entry));
+  const todayMs = Date.parse(today);
+  return rankPapers(entries, votes, today).map(entry => ({
+    key: 'arxiv', entry, votes: votes?.[paperBaseId(entry.id)],
+    batch: Math.floor((todayMs - Date.parse(entry.published)) / 864000000),
+  }));
+}
+
 function orderPaperSearch(items, today) {
   const votesById = currentVotes();
   const todayMs = Date.parse(today);
@@ -151,6 +172,7 @@ function trendingPapers(today) {
   const todayMs = Date.parse(today);
   const ranked = [];
   for (const entry of modules.arxiv.entries) {
+    if (isReadPaper(entry)) continue;
     const votes = votesById[entry.id];
     if (!Number.isSafeInteger(votes) || votes <= 0) continue;
     const age = (todayMs - Date.parse(entry.published)) / 86_400_000;
@@ -164,7 +186,8 @@ function newEntries(key) {
   const mark = state.seen[key];
   if (!mark) return [];
   const cutoff = collectionOrder(mark.cutoff);
-  return entriesFor(key).filter(entry => !Object.hasOwn(mark.items, entry.id) && entry.collection > cutoff)
+  return entriesFor(key).filter(entry => !(key === 'arxiv' && isReadPaper(entry)) &&
+    !Object.hasOwn(mark.items, entry.id) && entry.collection > cutoff)
     .sort((left, right) => right.collection.localeCompare(left.collection));
 }
 
@@ -367,6 +390,14 @@ function searchContext(entry, key, query) {
   return '';
 }
 
+function paperReadButton(entry) {
+  const read = isReadPaper(entry);
+  const label = read ? '标为未读' : '标为已读';
+  return '<button type="button" class="paper-read" data-action="paper-read" data-id="' +
+    escapeHtml(paperBaseId(entry.id)) + '" aria-pressed="' + read + '" aria-label="' +
+    label + ' · ' + escapeHtml(entry.title) + '" title="' + label + '">' + (read ? '已读' : label) + '</button>';
+}
+
 function cardRows(items, {titlesOnly = false} = {}) {
   return items.map(({key, entry, votes, batch}) => {
     const anchor = safeUrl(entry.original);
@@ -410,15 +441,17 @@ function cardRows(items, {titlesOnly = false} = {}) {
     const alternatives = evidenceLinks(entry.evidence, anchor, entry.source, podcast) +
       (votes !== undefined ? '<a href="https://huggingface.co/papers/' + encodeURIComponent(entry.id) + '" target="_blank" rel="noopener noreferrer">Hugging Face 投票页 ' + icon('external') + '</a>' : '');
     return '<article class="source-record" data-channel="' + key + '">' + card + abstract +
-      (alternatives ? '<div class="source-evidence" aria-label="其他来源">' + alternatives + '</div>' : '') + '</article>';
+      (key === 'arxiv' || alternatives ? '<div class="source-evidence">' + alternatives +
+        (key === 'arxiv' ? paperReadButton(entry) : '') + '</div>' : '') + '</article>';
   }).join('');
 }
 
 function cardList(name, items, options = {}) {
   if (!items.length) return '<p class="empty-state">这个范围还没有收录内容。</p>';
-  cardPages[name] = {items, offset: cardPageSize, titlesOnly: options.titlesOnly};
-  return '<div class="source-cards">' + cardRows(items.slice(0, cardPageSize), options) + '</div>' +
-    (items.length > cardPageSize
+  const limit = options.limit ?? cardPageSize;
+  cardPages[name] = {items, offset: limit, titlesOnly: options.titlesOnly};
+  return '<div class="source-cards">' + cardRows(items.slice(0, limit), options) + '</div>' +
+    (items.length > limit
       ? '<button class="button button-outline load-more" type="button" data-action="more" data-list="' + name + '">' +
         (options.titlesOnly ? '加载更多标题' : '加载更多') + '</button>'
       : '');
@@ -451,15 +484,17 @@ function cover(item) {
     '<h2>' + title + '</h2><p' + abstract + '>' + escapeHtml(point || coverSentence(entry.summary)) + '</p>' +
     '<div class="cover-tail"><span class="cover-cta">阅读原文 ' + icon('external') + '</span>' +
     '<span class="cover-credit">' + escapeHtml(modules[key].name) + ' <time>' + escapeHtml(entry.published) + '</time>' +
-    (item.votes ? '<span>Hugging Face 推荐 ' + number.format(item.votes) + ' 票</span>' : '') + '</span></div></a></div></header>';
+    (item.votes ? '<span>Hugging Face 推荐 ' + number.format(item.votes) + ' 票</span>' : '') + '</span></div></a>' +
+    (key === 'arxiv' ? paperReadButton(entry) : '') + '</div></header>';
 }
 
-function renderHome() {
+function renderHome(limit = cardPageSize) {
   const range = retentionWindow();
   homeItems = Object.keys(modules).flatMap(key => entriesFor(key, range).map(entry => ({key, entry})))
     .sort((left, right) => comparePublication(left.entry, right.entry));
-  const lead = trendingPapers(range.end)[0] ?? homeItems[0];
-  homeFeed = homeItems.filter(item => item.entry !== lead?.entry);
+  const unread = homeItems.filter(item => item.key !== 'arxiv' || !isReadPaper(item.entry));
+  const lead = trendingPapers(range.end)[0] ?? unread[0];
+  homeFeed = unread.filter(item => item.entry !== lead?.entry);
   const channels = Object.entries(modules).map(([key, module]) => {
     const count = newEntries(key).length;
     const label = count ? '新增 ' + number.format(count) + ' ' + module.unit : module.condition && !entriesFor(key, range).length ? '暂无收录' : '无新增';
@@ -471,7 +506,7 @@ function renderHome() {
       icon('chevron') + '</a>';
   }).join('');
   const otherLeads = Object.keys(modules).filter(key => key !== lead?.key)
-    .map(key => ({key, entry: entriesFor(key, range)[0]})).filter(item => item.entry)
+    .map(key => ({key, entry: unread.find(item => item.key === key)?.entry})).filter(item => item.entry)
     .sort((left, right) => comparePublication(left.entry, right.entry));
   const briefs = otherLeads.map(({key, entry}) => '<a class="brief" data-channel="' + key + '" href="' +
     escapeHtml(entry.original) + '" target="_blank" rel="noopener noreferrer"><span class="brief-meta">' +
@@ -484,7 +519,7 @@ function renderHome() {
     '<label class="feed-search">' + icon('search') + '<input type="search" id="feed-query" aria-label="搜索主题、作者、来源或完整摘要" aria-controls="feed-results" placeholder="搜索主题、作者或摘要"></label></div>' +
     '<div class="index-meta"><span id="result-total" role="status">收录 ' + number.format(homeItems.length) + ' 条</span><span>' +
     range.start.replaceAll('-', '.') + ' — ' + range.end.replaceAll('-', '.') + '</span></div>' +
-    '<div id="feed-results">' + (homeItems.length === 1 ? '' : cardList('home', homeFeed)) + '</div></section>' +
+    '<div id="feed-results">' + (homeFeed.length ? cardList('home', homeFeed, {limit}) : '') + '</div></section>' +
     (briefs ? '<aside class="briefs"><h2>各栏最新</h2>' + briefs + '</aside>' : '') + '</div></div>';
 }
 
@@ -501,7 +536,7 @@ page.addEventListener('input', async event => {
     const found = term ? await findArticles(term, paperScope) : null;
     if (sequence !== searchSequence || !field.isConnected) return;
     activeSearch = found?.query ?? null;
-    const rows = found ? orderPaperSearch(found.items, retentionWindow().end) : paperScope;
+    const rows = found ? orderPaperSearch(found.items, retentionWindow().end) : recommendedPapers(paperScope, retentionWindow().end);
     total.textContent = number.format(rows.length) + ' 篇' + (found?.limited ? ' · 全文索引暂不可用' : '');
     page.querySelector('#paper-results').innerHTML = !rows.length && term ? '<p class="empty-state">没有匹配的论文。</p>' : cardList('module', rows);
     observeSummaries(page);
@@ -632,8 +667,8 @@ function renderModule(key, path, children, revisionsOnly) {
     return !current || paths.some(parts => path.every(({id}, index) => parts[index] === id));
   });
   let contents = trending ? trendingPapers(retentionWindow().end) : visible.map(entry => ({key, entry}));
-  if (key === 'arxiv' && !revisionsOnly && !trending) contents = orderPaperSearch(contents, retentionWindow().end);
   paperScope = key === 'arxiv' ? contents : [];
+  if (key === 'arxiv' && !revisionsOnly && !trending) contents = recommendedPapers(paperScope, retentionWindow().end);
   const search = key === 'arxiv' && !revisionsOnly && !trending ?
     '<label class="feed-search">' + icon('search') + '<input type="search" id="paper-query" aria-label="在此目录搜索标题、作者和完整摘要" placeholder="搜索标题、作者或摘要"></label>' : '';
   return breadcrumb(crumbs) + '<section class="module-page" data-channel="' + key + '"><header class="module-lead"><div class="module-identity"><span class="module-symbol" aria-hidden="true">' + icon(key) + '</span><div>' +
@@ -656,7 +691,8 @@ function renderModule(key, path, children, revisionsOnly) {
       '（北京时间）</p>' : automaticCheckLine(key)) + (module.condition
       ? '<p class="module-notice" role="status">' + module.condition.message + (contents.length ? ' 以下为近期已核实条目。' : '') + '</p>'
       : '') + (!current && ['x','wechat','blogs'].includes(key) ? sourceDetails(module) : '') +
-      '<div id="paper-results">' + (trending && !contents.length ? '<p class="empty-state">近 10 天暂无可核验的推荐票。</p>' :
+      '<div id="paper-results">' + (trending && !contents.length ? '<p class="empty-state">近 10 天暂无有推荐票的未读论文。</p>' :
+      key === 'arxiv' && paperScope.length && !contents.length ? '<p class="empty-state">这个方向的论文已全部读过，可搜索回看。</p>' :
       contents.length || !module.condition ? cardList('module', contents) : '') + '</div></section></div></section>';
 }
 
@@ -721,6 +757,65 @@ function openUpdates(trigger) {
   paintSheet();
   sheet.showModal();
 }
+
+function refreshReadView(id, trigger) {
+  if (currentModule && currentModule !== 'arxiv') return;
+  const field = page.querySelector('#paper-query, #feed-query');
+  const query = field?.value ?? '';
+  const controls = () => [...page.querySelectorAll('[data-action="paper-read"]')];
+  const position = trigger ? controls().indexOf(trigger) : -1;
+  const today = retentionWindow().end;
+  if (!currentModule) {
+    page.innerHTML = renderHome(cardPages.home?.offset);
+    observeSummaries(page);
+    const intro = page.querySelector('.cover-story [data-abstract-file]');
+    if (intro) loadPaperText(intro);
+    if (query) {
+      const search = page.querySelector('#feed-query');
+      search.value = query;
+      search.dispatchEvent(new Event('input', {bubbles: true}));
+      if (trigger) search.focus({preventScroll: true});
+      return;
+    }
+  } else {
+    const updates = page.querySelector('.update-trigger :is([data-action="updates"], .count-read)');
+    if (updates) updates.outerHTML = updatesButton('arxiv');
+    if (query.trim() || location.hash.startsWith('#/arxiv/revisions')) {
+      for (const button of controls()) {
+        if (id && button.dataset.id !== id) continue;
+        const read = readPapers.has(button.dataset.id);
+        button.setAttribute('aria-pressed', String(read));
+        button.title = read ? '标为未读' : '标为已读';
+        button.setAttribute('aria-label', button.title + ' · ' + button.closest('article').querySelector('h3').textContent);
+        button.textContent = read ? '已读' : '标为已读';
+      }
+      return;
+    }
+    const rows = location.hash.startsWith('#/arxiv/trending') ? trendingPapers(today) : recommendedPapers(paperScope, today);
+    page.querySelector('.module-total').textContent = number.format(rows.length) + ' 篇';
+    page.querySelector('#paper-results').innerHTML = rows.length
+      ? cardList('module', rows, {limit: cardPages.module?.offset})
+      : '<p class="empty-state">当前范围暂无未读推荐。</p>';
+    observeSummaries(page);
+  }
+  if (trigger) {
+    const buttons = controls();
+    (buttons[Math.min(position, buttons.length - 1)] || field || page).focus({preventScroll: true});
+  }
+}
+
+window.addEventListener('storage', event => {
+  if (event.storageArea !== localStorage) return;
+  if (event.key === null) {
+    readPapers.clear();
+    refreshReadView();
+  } else if (event.key.startsWith(readPaperPrefix)) {
+    const id = event.key.slice(readPaperPrefix.length);
+    if (event.newValue === null) readPapers.delete(id);
+    else readPapers.add(id);
+    refreshReadView(id);
+  }
+});
 sheet.addEventListener('close', () => {
   if (sheet.open) return;
   const returnFocus = sheetTrigger;
@@ -748,6 +843,21 @@ document.addEventListener('click', event => {
   const button = event.target.closest('button[data-action]');
   if (!button) return;
   switch (button.dataset.action) {
+    case 'paper-read': {
+      const id = button.dataset.id;
+      const mark = !readPapers.has(id);
+      if (mark) readPapers.add(id);
+      else readPapers.delete(id);
+      let saved = true;
+      try {
+        if (mark) localStorage.setItem(readPaperPrefix + id, '1');
+        else localStorage.removeItem(readPaperPrefix + id);
+      } catch { saved = false; }
+      refreshReadView(id, button);
+      status.textContent = (mark ? '已标为已读，可在搜索中找回。' : '已恢复为未读。') +
+        (saved ? '' : '浏览器无法保存，本次访问有效。');
+      break;
+    }
     case 'more':
       appendCards(button);
       break;

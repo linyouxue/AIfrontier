@@ -25,7 +25,7 @@ def redirect(site, directory, route):
 
 
 def publish_shell(site, snapshot, heat, first, last):
-    for name in ("index.html", "app.js", "styles.css", "search.js"):
+    for name in ("index.html", "app.js", "styles.css", "search.js", "paper-ranking.js"):
         copyfile(ROOT / "site" / name, site / name)
     copytree(ROOT / "site" / "assets", site / "assets", dirs_exist_ok=True)
     checks = {}

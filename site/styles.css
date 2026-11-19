@@ -261,6 +261,10 @@ time { font-variant-numeric: tabular-nums; }
 .source-evidence { display: flex; flex-wrap: wrap; gap: 0 16px; }
 .source-evidence a { align-content: center; min-height: 44px; color: var(--lavender); font-size: .87rem; overflow-wrap: anywhere; }
 .source-evidence .icon { width: 13px; vertical-align: -.18em; }
+.paper-read { min-height: 44px; padding: 0 5px; border: 0; background: transparent; color: var(--lavender); font: inherit; font-size: .87rem; cursor: pointer; }
+.source-evidence .paper-read { margin-inline-start: auto; }
+.paper-read:hover { text-decoration: underline; }
+.paper-read[aria-pressed="true"] { color: var(--muted); }
 .source-evidence small { display: block; padding-block: 3px; color: var(--muted); font-size: .81rem; }
 .source-record[data-channel="podcasts"], .source-record[data-channel="podcasts"] .source-card,
 .source-record[data-channel="podcasts"] .source-copy { display: flex; flex-direction: column; }

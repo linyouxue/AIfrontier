@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta, timezone
 import gzip
 import json
 import os
+import subprocess
 from zoneinfo import ZoneInfo
 
 from arxiv_lists import CORE, SUPPLEMENTARY, LIST_URL
@@ -31,12 +32,12 @@ def expected_announcement(now):
 
 def ranked(papers, votes, today):
     first, last = publication_window(today)
-    valid = [p for p in papers if first <= p["published"] <= last]
-    def order(p):
-        day = date.fromisoformat(p["published"]).toordinal()
-        batch = (today.toordinal() - day) // 10
-        return (batch, -votes.get(p["id"], -1), -day, p["id"])
-    return sorted(valid, key=order)
+    valid = {p["id"]: p for p in papers if first <= p["published"] <= last}
+    payload = {"today": last, "votes": votes,
+               "papers": [{"id": p["id"], "published": p["published"]} for p in valid.values()]}
+    result = subprocess.run(["node", str(ROOT / "site/paper-ranking.js")], input=json.dumps(payload),
+                            stdout=subprocess.PIPE, encoding="utf-8", check=True)
+    return [valid[key] for key in json.loads(result.stdout)]
 
 
 def publish(work, output, state, heat, now):

@@ -22,6 +22,7 @@ TITLE_SUFFIXES = {"xiaohongshu": (" - 笔记 • 小红书 / RED", " - 小红书
 PRIMARY_ANNOUNCEMENTS = {
     "openai.com": re.compile(r"/index/[a-z0-9][a-z0-9-]*"),
     "anthropic.com": re.compile(r"/news/[a-z0-9][a-z0-9-]*"),
+    "deepmind.google": re.compile(r"/blog/[a-z0-9][a-z0-9-]*"),
     "api-docs.deepseek.com": re.compile(r"/zh-cn/(?:news/news[0-9]{6}|updates#[\w-]+)"),
     "platform.claude.com": re.compile(r"/docs/en/release-notes/overview\?entry=[a-z0-9-]+"),
 }

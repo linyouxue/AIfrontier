@@ -309,6 +309,10 @@ time { font-variant-numeric: tabular-nums; }
   .module-layout:not(:has(.direction-block)) .entries-block .source-copy { display: flex; flex-direction: column; }
   .module-layout:not(:has(.direction-block)) .entries-block :is(.source-card, .source-copy) { flex: 1; }
   .module-layout:not(:has(.direction-block)) .entries-block .source-meta { margin-top: auto; padding-top: 12px; }
+  .module-page[data-channel="events"] .entries-block .source-record {
+    display: grid; grid-template-rows: subgrid; grid-row: span 2; row-gap: 0;
+  }
+  .module-page[data-channel="events"] .entries-block .source-record .source-evidence { align-items: center; }
 }
 .site-footer { margin-top: 40px; padding: 16px 0 25px; border-top: 1px solid var(--rule-soft); }
 .site-footer > a { color: var(--muted); font-size: 1.5rem; min-height: 44px; }

@@ -10,6 +10,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Callable, Iterable
 from urllib.error import HTTPError
+from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 
 from build_preview import ROOT, SHANGHAI, publication_window
@@ -219,6 +220,14 @@ def collect_events(output, sources=(), *, extra_sources=(), active_ids=None, hig
         except (OSError, HTTPException, ValueError, TypeError, KeyError, AttributeError, ET.ParseError) as error:
             status["status"] = "failed"
             status["error"] = f"HTTP {error.code}" if isinstance(error, HTTPError) else type(error).__name__
+            if isinstance(error, HTTPError) and urlsplit(error.url).hostname == "127.0.0.1":
+                report = error.read(65536).decode("utf-8", errors="replace").lower()
+                for phrase, reason in [("captcha", "平台要求验证"), ("验证码", "平台要求验证"),
+                                       ("please log in", "需要有效登录会话"), ("登录失效", "需要有效登录会话"),
+                                       ("econnreset", "上游连接中断"), ("timed out", "上游连接超时")]:
+                    if phrase in report:
+                        status["error"] += " · " + reason
+                        break
         else:
             if status["status"] == "ok":
                 status["lastSuccessAt"] = checked

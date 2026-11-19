@@ -103,7 +103,9 @@ jobs:
           echo "AIFRONTIER_RSSHUB_URL=http://127.0.0.1:1200" >> "$GITHUB_ENV"
           image=ghcr.io/diygod/rsshub@sha256:40f115be9967377880b2ea62ecf5d4fd4b1820c15518dd9146f3b874464ffdb2
           if docker run -d --rm --name social-rsshub --log-driver=none -p 127.0.0.1:1200:1200 -e XIAOHONGSHU_COOKIE -e WEIBO_COOKIES "$image"; then
-            curl --fail --silent --retry 12 --retry-connrefused --retry-delay 2 --max-time 4 http://127.0.0.1:1200/healthz >/dev/null || echo "::warning::RSSHub has not become ready"
+            if ! curl --noproxy 127.0.0.1 --fail --silent --show-error --retry 18 --retry-all-errors --retry-delay 2 --max-time 4 http://127.0.0.1:1200/healthz >/dev/null; then
+              echo "::warning::RSSHub readiness failed; checking each configured feed independently"
+            fi
           else
             echo "::warning::RSSHub did not start"
           fi

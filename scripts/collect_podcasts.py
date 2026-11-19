@@ -21,6 +21,8 @@ ROOT = Path(__file__).resolve().parents[1]
 LATENT_FEED = "https://podcast.latent.space/feed.xml"
 LATENT_ARCHIVE = "https://latent.space/podcasts/"
 DWARKESH_FEED = "https://api.substack.com/feed/podcast/69345.rss"
+DWARKESH_APPLE = "https://itunes.apple.com/lookup?id=1516093381&entity=podcastEpisode&limit=100&country=US"
+DWARKESH_CHANNEL = "UCXl4i9dYBrFOabk0xGmbkRA"
 ITUNES = "{http://www.itunes.com/dtds/podcast-1.0.dtd}"
 CLIP = re.compile(
     r"\b(?:trailer|teaser|shorts)\b|\b(?:clip|preview|excerpt|highlight)s?\s*[:|—)\]]"
@@ -278,6 +280,44 @@ def episode_links(episode):
         yield evidence["url"]
 
 
+def dwarkesh_syndicated(first_day, last_day, items):
+    """Match the publisher's full video with the same episode in Apple Podcasts."""
+    catalog = json.loads(read(DWARKESH_APPLE))["results"]
+    if not any(r.get("collectionId") == 1516093381 and r.get("kind") == "podcast" for r in catalog):
+        raise ValueError("Unexpected Apple Podcasts catalog")
+    atom = ET.fromstring(read("https://www.youtube.com/feeds/videos.xml?channel_id=" + DWARKESH_CHANNEL))
+    if atom.findtext("{*}channelId") not in {DWARKESH_CHANNEL, DWARKESH_CHANNEL[2:]}:
+        raise ValueError("Unexpected video channel")
+    videos = []
+    for entry in atom.findall("{*}entry"):
+        link = entry.find("{*}link")
+        identifier = video_id(link.get("href", "")) if link is not None else ""
+        if identifier and identifier == entry.findtext("{*}videoId") and not CLIP.search(entry.findtext("{*}title", "")):
+            videos.append((identifier, " ".join(entry.findtext("{*}group/{*}description", "").casefold().split())))
+    for episode in catalog:
+        if episode.get("kind") != "podcast-episode" or episode.get("collectionId") != 1516093381:
+            continue
+        title = episode["trackName"]
+        desc = episode.get("description", "")
+        intro, marker, _ = desc.partition("Watch on YouTube")
+        if not marker or not intro.strip():
+            continue
+        day = datetime.fromisoformat(episode["releaseDate"]).astimezone(SHANGHAI).date().isoformat()
+        guests = title_guests(title, before_topic=True)
+        if (not first_day <= day <= last_day or CLIP.search(title) or SOLO.search(intro[:280])
+                or not (guests or re.search(r"\b(interview|roundtable|debate)\b", title, re.I))
+                or not AI_TOPIC.search(title + " " + intro[:500])):
+            continue
+        opening = " ".join(intro.casefold().split()[:15])
+        matches = [identifier for identifier, description in videos if len(opening) > 45 and opening in description]
+        if len(matches) == 1:
+            identifier = matches[0]
+            items[identifier] = make_item(identifier, title, intro, "Dwarkesh Podcast", day,
+                                          page=episode["trackViewUrl"].split("&uo=")[0], guests=guests,
+                                          seconds=episode.get("trackTimeMillis", 0) // 1000,
+                                          topics=[title_topic(title, after_guest=bool(guests))])
+
+
 def collect(dwarkesh_feed_url, latent_feed_url, latent_archive_url, output):
     now = datetime.now(timezone.utc)
     checked_at = now.isoformat()
@@ -299,6 +339,15 @@ def collect(dwarkesh_feed_url, latent_feed_url, latent_archive_url, output):
     for source_id, collector, urls in collectors:
         discovered, failures = {}, []
         collector(*urls, first_day, last_day, discovered, failures)
+        via = None
+        if source_id == "dwarkesh-podcast" and failures and urls == (DWARKESH_FEED,):
+            try:
+                dwarkesh_syndicated(first_day, last_day, discovered)
+            except (OSError, ValueError, KeyError, ET.ParseError) as error:
+                failures.append(f"Apple Podcasts / YouTube: {type(error).__name__}")
+            else:
+                via = "Apple Podcasts + YouTube"
+                failures.clear()
         inserted = 0
         # Resolve alternate uploads against their official episode page before feed-only records.
         for episode in sorted(discovered.values(), key=lambda item: not item.get("evidence")):
@@ -309,6 +358,8 @@ def collect(dwarkesh_feed_url, latent_feed_url, latent_archive_url, output):
                 # Feed-only evidence should not replace an established episode page and video.
                 if not episode.get("evidence") and previous.get("evidence"):
                     continue
+                if via and previous.get("evidence"):
+                    episode["evidence"] = list({e["url"]: e for e in [*previous["evidence"], *episode.get("evidence", [])]}.values())
                 retained[key] = {**previous, **episode, "id": key, "published": previous["published"]}
             else:
                 retained[key] = {**episode, "collected": checked_at}
@@ -321,6 +372,8 @@ def collect(dwarkesh_feed_url, latent_feed_url, latent_archive_url, output):
         }
         if failures:
             source["error"] = "; ".join(failures)
+        if via:
+            source["via"] = via
         if status == "ok":
             source["lastSuccessAt"] = checked_at
         elif last_success := prior_sources.get(source_id, {}).get("lastSuccessAt"):

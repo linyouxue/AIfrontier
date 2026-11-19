@@ -138,6 +138,8 @@ def collect(registry, previous, base):
             status = {"id": source_id, "platform": platform, "name": owner if is_x else account["name"],
                       "checkedAt": checked, "status": "ok", "inserted": 0, "discovered": 0}
             sources.append(status)
+            if not is_x:
+                status["verifiedNotes"] = 0
             if last_ok := prior_sources.get(source_id, {}).get("lastSuccessAt"):
                 status["lastSuccessAt"] = last_ok
             if not is_x and not base:
@@ -146,6 +148,8 @@ def collect(registry, previous, base):
             try:
                 rows = x_posts(owner) if is_x else xhs_posts(base, account)
                 for row in rows:
+                    if not is_x:
+                        status["verifiedNotes"] += 1
                     if not first <= row["published"] <= last:
                         continue
                     status["discovered"] += 1

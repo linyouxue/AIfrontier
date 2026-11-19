@@ -6,7 +6,7 @@ on:
       scope:
         description: Choose which sources to check before publishing
         type: choice
-        options: [all, events, publish]
+        options: [all, events, publish, sources]
         default: all
       force_arxiv:
         description: Recheck official arXiv announcements even if today's batch was verified
@@ -64,7 +64,7 @@ jobs:
             esac
           done
       - name: Collect and render public WeChat articles
-        if: env.FULL_UPDATE == 'true'
+        if: env.FULL_UPDATE == 'true' || inputs.scope == 'sources'
         env:
           AIFRONTIER_WEREAD_COOKIE: ${{ secrets.AIFRONTIER_WEREAD_COOKIE }}
         run: |
@@ -110,11 +110,15 @@ jobs:
             echo "::warning::RSSHub did not start"
           fi
       - name: Collect and publish account updates
-        if: env.FULL_UPDATE == 'true'
+        if: env.FULL_UPDATE == 'true' || inputs.scope == 'sources'
         run: |
           python3 scripts/collect_social.py
           python3 scripts/render_social.py
           jq -r '.sources[] | [.name, .status, (.inserted|tostring)] | join(" · ")' dist/wechat-preview/social.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Check Xiaohongshu source health
+        if: inputs.scope == 'sources'
+        run: |
+          docker exec -i social-rsshub node --input-type=module - < scripts/check_xhs_source.mjs
       - name: Collect hourly AI events
         if: inputs.scope != 'publish'
         env:
@@ -122,7 +126,10 @@ jobs:
           BILIBILI_FEED_URL: ${{ secrets.BILIBILI_FEED_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: python3 -u scripts/collect_events.py --output dist/wechat-preview
+        run: |
+          args=()
+          if [[ "${{ inputs.scope }}" == sources ]]; then args+=(--no-highlights); fi
+          python3 -u scripts/collect_events.py --output dist/wechat-preview "${args[@]}"
       - name: Collect complete video podcast episodes
         if: env.FULL_UPDATE == 'true'
         run: python3 -u scripts/collect_podcasts.py --output dist/wechat-preview

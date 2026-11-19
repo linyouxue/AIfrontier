@@ -15,6 +15,10 @@
     "realbingbingfan",
     "washingtonpost"
   ],
+  "eventX": ["OpenAI", "AnthropicAI", "GoogleDeepMind", "thsottiaux"],
+  "videoSearch": ["Andrej Karpathy", "Yann LeCun", "Fei-Fei Li", "Sam Altman", "Demis Hassabis", "Shunyu Yao", "Kaiming He"],
+  "youtube": [{"name": "Google DeepMind", "channel": "UCP7jMXSY2xbc3KCAE0MHQ-A", "official": true}],
+  "weibo": [{"profile": "https://weibo.com/u/7983316472", "officialName": "千问大模型"}],
   "baselineDate": "2026-11-18",
   "xiaohongshu": [
     {

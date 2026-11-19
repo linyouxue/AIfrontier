@@ -84,6 +84,12 @@ def main():
         if not state["papers"] or not state["taxonomy"]:
             raise ValueError("Invalid published paper archive")
         dump(state_file, state)
+    if os.getenv("FULL_UPDATE") == "false":
+        if not state:
+            raise ValueError("Hourly event publication requires the existing paper catalog")
+        heat = json.loads((work / FILENAME).read_bytes()) if (work / FILENAME).exists() else {}
+        publish(work, output, state, heat, datetime.now(timezone.utc))
+        return
     now = datetime.now(timezone.utc)
     today = now.astimezone(SHANGHAI).date()
     late = not state or (today - date.fromisoformat(state["announcementDate"])).days > 6

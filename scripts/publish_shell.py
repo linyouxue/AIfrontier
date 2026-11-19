@@ -32,16 +32,17 @@ def publish_shell(site, snapshot, heat, first, last):
     for channel, name in [("wechat","wechat"),("blogs","blogs"),("x","social"),
                           ("events","events"),("podcasts","podcasts")]:
         data_file = site / (name + ".json")
-        if channel in ("events","podcasts"):
-            data = json.loads((ROOT / "config" / (name+"-baseline.json")).read_bytes())
-            data["items"] = [row for row in data["items"] if first <= row["published"] <= last]
-            data_file.write_text(json.dumps(data,ensure_ascii=False), encoding="utf-8")
-            checks[channel] = {"archivedAt":max(s["checkedAt"] for s in data["sources"])}
-        else:
-            data = json.loads(data_file.read_bytes())
-            sources = data["sources"]
-            checks[channel] = {"checkedAt": max(s["checkedAt"] for s in sources),
-                               "status": "ok" if all(s["status"]=="ok" for s in sources) else "partial"}
+        data = json.loads(data_file.read_bytes())
+        sources = data["sources"]
+        successful = sum(s["status"] == "ok" for s in sources)
+        partial = any(s["status"] == "partial" for s in sources)
+        checks[channel] = {"checkedAt": max(s["checkedAt"] for s in sources),
+                           "status": "ok" if successful == len(sources) else "partial" if successful or partial else "failed"}
+        if channel in ("events", "podcasts"):
+            if all("inserted" in s for s in sources):
+                checks[channel]["inserted"] = sum(s["inserted"] for s in sources)
+            else:
+                checks[channel] = {"archivedAt": checks[channel]["checkedAt"]}
         if channel == "x":
             # The search builder uses the reader's module id as the filename.
             registry = json.loads((ROOT / "config/social-accounts.json").read_bytes())
@@ -61,5 +62,5 @@ def publish_shell(site, snapshot, heat, first, last):
         docs.append(("arxiv:"+p["id"],p["title"],p["summary"],meta))
     build_search_index(site, docs)
     for directory, route in {"papers":"arxiv","wechat":"wechat","blogs":"blogs","blogs/author":"blogs/author",
-                             "blogs/team":"blogs/team","social":"x"}.items():
+                             "blogs/team":"blogs/team","social":"x","events":"events","podcasts":"podcasts"}.items():
         redirect(site,directory,route)

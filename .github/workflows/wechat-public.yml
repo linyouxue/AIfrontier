@@ -3,12 +3,18 @@ name: Refresh AIfrontier publications
 on:
   workflow_dispatch:
     inputs:
+      scope:
+        description: Choose which sources to check before publishing
+        type: choice
+        options: [all, events]
+        default: all
       force_arxiv:
         description: Recheck official arXiv announcements even if today's batch was verified
         type: boolean
         default: false
   schedule:
     - cron: '57 1-23/4 * * *'
+    - cron: '57 0,2-4,6-8,10-12,14-16,18-20,22-23 * * *'
 
 permissions:
   contents: read
@@ -24,16 +30,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 100
     env:
+      FULL_UPDATE: ${{ github.event.schedule == '57 1-23/4 * * *' || (github.event_name == 'workflow_dispatch' && inputs.scope != 'events') }}
       SNAPSHOT_KEY: public-wechat-v1-${{ github.run_id }}-${{ github.run_attempt }}
     outputs:
       reader_ok: ${{ steps.report.outputs.reader_ok }}
       blogs_ok: ${{ steps.blogs.outputs.blogs_ok }}
       papers_ok: ${{ steps.papers.outputs.fresh }}
+      events_ok: ${{ steps.channels.outputs.events_ok }}
+      podcasts_ok: ${{ steps.channels.outputs.podcasts_ok }}
     steps:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - uses: actions/cache/restore@v6
+        if: env.FULL_UPDATE == 'true'
         with:
           path: dist/wechat-preview/wechat.json
           key: ${{ env.SNAPSHOT_KEY }}
@@ -42,24 +52,26 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist/wechat-preview
-          for name in wechat blogs social; do
+          for name in wechat blogs social events podcasts; do
             file="dist/wechat-preview/$name.json"
             if [[ -s "$file" ]]; then continue; fi
             status=$(curl --silent --show-error --location --retry 2 --max-time 45 --output "$RUNNER_TEMP/previous.json" --write-out '%{http_code}' "https://linyouxue.github.io/AIfrontier/$name.json?run=$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT")
             case "$status" in
               200) jq -e '(.items | type == "array") and (.sources | type == "array")' "$RUNNER_TEMP/previous.json" >/dev/null
                    cp "$RUNNER_TEMP/previous.json" "$file" ;;
-              404) echo "No previous public $name archive" ;;
+              404) if [[ "$name" == events || "$name" == podcasts ]]; then cp "config/$name-baseline.json" "$file"; else echo "No previous public $name archive"; fi ;;
               *) echo "::error::Unable to restore $name (HTTP $status)"; exit 1 ;;
             esac
           done
       - name: Collect and render public WeChat articles
+        if: env.FULL_UPDATE == 'true'
         env:
           AIFRONTIER_WEREAD_COOKIE: ${{ secrets.AIFRONTIER_WEREAD_COOKIE }}
         run: |
           python3 scripts/collect_public_wechat.py --with-reader
           python3 scripts/render_wechat_preview.py
       - name: Collect and publish technical blogs
+        if: env.FULL_UPDATE == 'true'
         id: blogs
         run: |
           python3 scripts/collect_blogs.py
@@ -83,26 +95,51 @@ jobs:
           with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
               print('blogs_ok=' + str(any(s['status']=='ok' for s in data['sources'])).lower(), file=out)
           PY
-      - name: Start the Xiaohongshu reader
+      - name: Start the hourly social feed reader
         env:
           XIAOHONGSHU_COOKIE: ${{ secrets.XIAOHONGSHU_COOKIE }}
+          WEIBO_COOKIES: ${{ secrets.WEIBO_COOKIES }}
         run: |
-          if [[ -z "$XIAOHONGSHU_COOKIE" ]]; then
-            echo "::notice::Xiaohongshu awaits the XIAOHONGSHU_COOKIE secret"
-            exit 0
-          fi
           echo "AIFRONTIER_RSSHUB_URL=http://127.0.0.1:1200" >> "$GITHUB_ENV"
           image=ghcr.io/diygod/rsshub@sha256:40f115be9967377880b2ea62ecf5d4fd4b1820c15518dd9146f3b874464ffdb2
-          if docker run -d --rm --name social-rsshub --log-driver=none -p 127.0.0.1:1200:1200 -e XIAOHONGSHU_COOKIE "$image"; then
+          if docker run -d --rm --name social-rsshub --log-driver=none -p 127.0.0.1:1200:1200 -e XIAOHONGSHU_COOKIE -e WEIBO_COOKIES "$image"; then
             curl --fail --silent --retry 12 --retry-connrefused --retry-delay 2 --max-time 4 http://127.0.0.1:1200/healthz >/dev/null || echo "::warning::RSSHub has not become ready"
           else
             echo "::warning::RSSHub did not start"
           fi
       - name: Collect and publish account updates
+        if: env.FULL_UPDATE == 'true'
         run: |
           python3 scripts/collect_social.py
           python3 scripts/render_social.py
           jq -r '.sources[] | [.name, .status, (.inserted|tostring)] | join(" · ")' dist/wechat-preview/social.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Collect hourly AI events
+        env:
+          AIFRONTIER_ACCOUNT_FEEDS: ${{ secrets.AIFRONTIER_ACCOUNT_FEEDS }}
+          BILIBILI_FEED_URL: ${{ secrets.BILIBILI_FEED_URL }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python3 -u scripts/collect_events.py --output dist/wechat-preview
+      - name: Collect complete video podcast episodes
+        if: env.FULL_UPDATE == 'true'
+        run: python3 -u scripts/collect_podcasts.py --output dist/wechat-preview
+      - name: Publish channel data and report source health
+        id: channels
+        shell: bash
+        run: |
+          root=dist/wechat-preview
+          mkdir -p "$root/site"
+          if [[ "$FULL_UPDATE" == false ]]; then
+            for name in wechat blogs social; do cp "$root/$name.json" "$root/site/$name.json"; done
+          fi
+          for name in events podcasts; do
+            cp "$root/$name.json" "$root/site/$name.json"
+            if [[ "$name" == podcasts && "$FULL_UPDATE" == false ]]; then continue; fi
+            echo "### $name" >> "$GITHUB_STEP_SUMMARY"
+            jq -r '"近三个月合计 \(.items|length)，本轮新增 \([.sources[].inserted]|add)","", "| 来源 | 状态 | 候选 | 本轮新增 |", "|---|---|---:|---:|", (.sources[] | "| \(.id) | \(.status) | \(.discovered) | \(.inserted) |")' "$root/$name.json" >> "$GITHUB_STEP_SUMMARY"
+            jq -r '.sources[] | select(.status != "ok") | "::warning::\(.id) · \(.status) · \(.error // "source unavailable")"' "$root/$name.json"
+            ok=$(jq --arg name "$name" 'any(.sources[]; (.status == "ok" or (.status == "partial" and .discovered > 0)) and ($name != "events" or .platform == "official"))' "$root/$name.json")
+            echo "${name}_ok=$ok" >> "$GITHUB_OUTPUT"
+          done
       - name: Restore the published paper catalog and votes
         shell: bash
         run: |
@@ -129,6 +166,7 @@ jobs:
           FORCE_ARXIV: ${{ inputs.force_arxiv }}
         run: python3 -u scripts/publish_papers.py
       - name: Report source coverage
+        if: env.FULL_UPDATE == 'true'
         id: report
         run: |
           python3 - <<'PY'
@@ -148,6 +186,7 @@ jobs:
               print('reader_ok=' + str(any(s['platform']=='weread' and s['status']=='ok' for s in data['sources'])).lower(), file=out)
           PY
       - uses: actions/cache/save@v6
+        if: env.FULL_UPDATE == 'true'
         with:
           path: dist/wechat-preview/wechat.json
           key: ${{ env.SNAPSHOT_KEY }}
@@ -169,7 +208,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v5
       - name: Check WeRead availability
-        if: needs.collect.outputs.reader_ok != 'true'
+        if: needs.collect.outputs.reader_ok == 'false'
         run: |
           echo "::error::No WeRead account could be verified. Check source status and the WeRead session. Retained articles and public RSS updates have been deployed."
           exit 1
@@ -182,4 +221,9 @@ jobs:
         if: always() && needs.collect.outputs.papers_ok == 'false'
         run: |
           echo "::error::The paper directory was rebuilt with retained data. Check the collection log."
+          exit 1
+      - name: Check live event and podcast availability
+        if: always() && (needs.collect.outputs.events_ok == 'false' || needs.collect.outputs.podcasts_ok == 'false')
+        run: |
+          echo "::error::No official event or podcast publisher could be checked for a requested module. See the per-source report."
           exit 1

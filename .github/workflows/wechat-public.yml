@@ -38,6 +38,7 @@ jobs:
       papers_ok: ${{ steps.papers.outputs.fresh }}
       events_ok: ${{ steps.channels.outputs.events_ok }}
       podcasts_ok: ${{ steps.channels.outputs.podcasts_ok }}
+      xhs_ok: ${{ steps.accounts.outputs.xhs_ok }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -110,15 +111,27 @@ jobs:
             echo "::warning::RSSHub did not start"
           fi
       - name: Collect and publish account updates
+        id: accounts
         if: env.FULL_UPDATE == 'true' || inputs.scope == 'sources'
+        env:
+          AIFRONTIER_ACCOUNT_FEEDS: ${{ secrets.AIFRONTIER_ACCOUNT_FEEDS }}
         run: |
           python3 scripts/collect_social.py
           python3 scripts/render_social.py
-          jq -r '.sources[] | [.name, .status, (.inserted|tostring)] | join(" · ")' dist/wechat-preview/social.json >> "$GITHUB_STEP_SUMMARY"
+          data=dist/wechat-preview/social.json
+          jq -r '"| 账号 | 状态 | 本轮核验笔记 | 近三个月命中 | 新增 |","|---|---|---:|---:|---:|", (.sources[] | "| \(.name) | \(.status) | \(.verifiedNotes // "—") | \(.discovered) | \(.inserted) |")' "$data" >> "$GITHUB_STEP_SUMMARY"
+          ok=$(jq --slurpfile registry config/social-accounts.json '
+            ([$registry[0].xiaohongshu[].id | "xiaohongshu:" + .] | sort) as $expected |
+            [.sources[] | select(.platform == "xiaohongshu" and .status == "ok" and .verifiedNotes > 0) | .id] |
+            ($expected | length) > 0 and sort == $expected' "$data")
+          echo "xhs_ok=$ok" >> "$GITHUB_OUTPUT"
       - name: Check Xiaohongshu source health
-        if: inputs.scope == 'sources'
+        if: inputs.scope == 'sources' && steps.accounts.outputs.xhs_ok == 'false'
         run: |
-          docker exec -i social-rsshub node --input-type=module - < scripts/check_xhs_source.mjs
+          mapfile -t owners < <(jq -r '.sources[] | select(.platform == "xiaohongshu" and .error == "HTTP 503" and .feedProvider == "rsshub") | .id | split(":")[1]' dist/wechat-preview/social.json)
+          if (( ${#owners[@]} )); then
+            docker exec -i social-rsshub node --input-type=module - "${owners[@]}" < scripts/check_xhs_source.mjs
+          fi
       - name: Collect hourly AI events
         if: inputs.scope != 'publish'
         env:
@@ -223,6 +236,11 @@ jobs:
         if: needs.collect.outputs.reader_ok == 'false'
         run: |
           echo "::error::No WeRead account could be verified. Check source status and the WeRead session. Retained articles and public RSS updates have been deployed."
+          exit 1
+      - name: Verify live notes for each tracked Xiaohongshu account
+        if: always() && inputs.scope == 'sources' && needs.collect.outputs.xhs_ok != 'true'
+        run: |
+          echo "::error::At least one tracked Xiaohongshu account did not return verifiable live notes. See the per-account counts and source health check."
           exit 1
       - name: Check blog availability
         if: always() && needs.collect.outputs.blogs_ok == 'false'

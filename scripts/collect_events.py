@@ -22,7 +22,7 @@ from event_sources import (
 from paper_highlights import HIGHLIGHTS_URL, OPENAI_URL, OPENAI_MODEL, highlight_connection, request_points
 from social_event_sources import profile_url, social_sources
 from x_event_sources import x_candidates
-from public_video_search import bilibili_results, youtube_results
+from public_video_search import VideoSearchError, bilibili_results, youtube_results
 from video_event_sources import video_sources
 
 
@@ -220,6 +220,8 @@ def collect_events(output, sources=(), *, extra_sources=(), active_ids=None, hig
         except (OSError, HTTPException, ValueError, TypeError, KeyError, AttributeError, ET.ParseError) as error:
             status["status"] = "failed"
             status["error"] = f"HTTP {error.code}" if isinstance(error, HTTPError) else type(error).__name__
+            if isinstance(error, VideoSearchError):
+                status["error"] = str(error)
             if isinstance(error, HTTPError) and urlsplit(error.url).hostname == "127.0.0.1":
                 report = error.read(65536).decode("utf-8", errors="replace").lower()
                 for phrase, reason in [("captcha", "平台要求验证"), ("验证码", "平台要求验证"),

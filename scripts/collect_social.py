@@ -12,6 +12,8 @@ import xml.etree.ElementTree as ET
 
 from collect_blogs import AI_TOPIC, clean, read
 from collect_public_wechat import ROOT, SHANGHAI, publication_window
+from event_sources import publication_date
+from social_event_sources import feed_entries, social_candidate
 
 
 REGISTRY = ROOT / "config" / "social-accounts.json"
@@ -122,12 +124,31 @@ def xhs_posts(base, account):
         raise ValueError("Some notes lack attributable titles or original dates")
 
 
+def subscribed_notes(url, expected):
+    profile, name, entries = feed_entries("xiaohongshu", url)
+    if profile != expected:
+        raise ValueError("Feed belongs to a different profile")
+    skipped = False
+    for entry in entries:
+        try:
+            note = social_candidate("xiaohongshu", profile, name, None, entry)
+            day = publication_date(note.published)
+        except (ValueError, TypeError, OverflowError):
+            skipped = True
+            continue
+        yield {"id": "xiaohongshu:" + note.url.rsplit("/", 1)[1], "original": note.url, "source": note.source,
+               "published": day, "title": note.title, "summary": re.sub(r"https?://\S+", "", note.summary).strip()}
+    if skipped:
+        raise ValueError("Some notes lack attributable titles or original dates")
+
+
 def collect(registry, previous, base):
     now = datetime.now(timezone.utc)
     checked = now.isoformat()
     first, last = publication_window(now.astimezone(SHANGHAI).date())
     items = {i["id"]: i for i in previous.get("items", []) if first <= i["published"] <= last}
     prior_sources = {s["id"]: s for s in previous.get("sources", [])}
+    account_feeds = json.loads(os.getenv("AIFRONTIER_ACCOUNT_FEEDS") or "{}")
     sources = []
     for platform in ("x", "xiaohongshu"):
         for account in registry[platform]:
@@ -139,16 +160,28 @@ def collect(registry, previous, base):
                       "checkedAt": checked, "status": "ok", "inserted": 0, "discovered": 0}
             sources.append(status)
             if not is_x:
+                profile = f"{XHS}/user/profile/{owner}"
+                feed = account_feeds.get(profile) or account.get("feed")
+                status["feedProvider"] = "subscription" if feed else "rsshub"
                 status["verifiedNotes"] = 0
             if last_ok := prior_sources.get(source_id, {}).get("lastSuccessAt"):
                 status["lastSuccessAt"] = last_ok
-            if not is_x and not base:
+            if not is_x and not (base or feed):
                 status["status"] = "unconfigured"
                 continue
             try:
-                rows = x_posts(owner) if is_x else xhs_posts(base, account)
+                if is_x:
+                    rows = x_posts(owner)
+                elif feed:
+                    rows = subscribed_notes(feed, profile)
+                else:
+                    rows = xhs_posts(base, account)
+                seen = set()
                 for row in rows:
                     if not is_x:
+                        if row["id"] in seen:
+                            continue
+                        seen.add(row["id"])
                         status["verifiedNotes"] += 1
                     if not first <= row["published"] <= last:
                         continue
@@ -159,7 +192,7 @@ def collect(registry, previous, base):
                         status["inserted"] += 1
                     items[key] = {**row, "platform": platform, "collected": old["collected"] if old else checked}
             except (OSError, HTTPException, ValueError, TypeError, KeyError, OverflowError, ET.ParseError) as error:
-                status["status"] = "partial" if status["discovered"] else "failed"
+                status["status"] = "partial" if status.get("verifiedNotes", status["discovered"]) else "failed"
                 status["error"] = f"HTTP {error.code}" if isinstance(error, HTTPError) else "来源未返回可核验的数据"
             else:
                 status["lastSuccessAt"] = checked

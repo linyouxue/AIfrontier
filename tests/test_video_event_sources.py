@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from unittest.mock import patch
+from urllib.error import HTTPError
 from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,6 +15,16 @@ from collect_events import EventSource, EventSourceBatch, collect_events
 from build_preview import SHANGHAI
 from event_sources import EvidenceCandidate
 from video_event_sources import DEEPMIND_CHANNEL, video_sources
+from public_video_search import bilibili_results
+
+
+class VideoSearch(unittest.TestCase):
+    def test_bilibili_preserves_platform_refusal(self):
+        refused = HTTPError("https://api.bilibili.com/", 412, "", {}, None)
+        with patch("public_video_search.read", side_effect=refused) as fetch:
+            with self.assertRaises(HTTPError):
+                bilibili_results("speaker", EventSourceBatch)
+        self.assertEqual(fetch.call_count, 1)
 
 
 def atom_entry(identifier, title, description, published, *, updated="", link="", channel=DEEPMIND_CHANNEL):

@@ -12,6 +12,23 @@ from collect_social import collect, x_posts
 
 
 class AccountUpdates(unittest.TestCase):
+    def test_account_feed_reads_original_atom_dates_and_rejects_wrong_owner(self):
+        owner, note = "a" * 24, "b" * 24
+        profile = "https://www.xiaohongshu.com/user/profile/" + owner
+        registry = {"x": [], "xiaohongshu": [{"id": owner, "name": "博主", "baseline": []}]}
+        document = f'''<feed xmlns="http://www.w3.org/2005/Atom"><title>博主</title>
+          <link href="{profile}"/><entry><title>技术笔记</title><author><name>博主</name></author>
+          <link href="https://www.xiaohongshu.com/explore/{note}"/><published>2020-01-01T01:00:00Z</published>
+          <updated>{datetime.now(timezone.utc).isoformat()}</updated></entry></feed>'''
+        url = "https://feeds.example/account"
+        with patch.dict("os.environ", {"AIFRONTIER_ACCOUNT_FEEDS": json.dumps({profile: url})}), \
+             patch("social_event_sources.read", side_effect=[document, document.replace(owner, "c"*24)]) as request:
+            source, = collect(registry, {}, None)["sources"]
+            self.assertEqual((source["status"], source["verifiedNotes"], source["discovered"]), ("ok", 1, 0))
+            self.assertEqual(request.call_args.args, (url,))
+            failed, = collect(registry, {}, None)["sources"]
+            self.assertEqual((failed["status"], failed["verifiedNotes"]), ("failed", 0))
+
     def test_x_feed_fallback_excludes_reposts_and_quoted_body(self):
         now = format_datetime(datetime.now(timezone.utc))
         text = "We measured GPU inference latency across model sizes and shared the benchmark results. " * 3
